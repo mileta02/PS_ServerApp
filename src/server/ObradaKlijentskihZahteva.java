@@ -12,6 +12,8 @@ import communication.Sender;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import logic.Controller;
+import model.Instruktor;
 
 /**
  *
@@ -34,13 +36,23 @@ public class ObradaKlijentskihZahteva extends Thread {
         try {
             Request request = (Request) receiver.receive();
             Response response = new Response();
-            
+            try{
             switch(request.getOperation()){
-                case Operation.LOGIN: System.out.println("Operacija login");
+                case Operation.LOGIN: 
+                    System.out.println("Operacija login");
+                    Instruktor i = (Instruktor) request.getArgument();
+                    response.setResult(Controller.getInstance().login(i));
+                    break;
+                case Operation.REGISTER:
+                    System.out.println("Operacija register");
+                    Instruktor in = (Instruktor) request.getArgument();
+                    response.setResult(Controller.getInstance().register(in));
                     break;
                
             }
-            
+            }catch(Exception ex){
+                response.setException(ex);
+            }
             sender.send(response);
         } catch (Exception ex) {
             Logger.getLogger(ObradaKlijentskihZahteva.class.getName()).log(Level.SEVERE, null, ex);

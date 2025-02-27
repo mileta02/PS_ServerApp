@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.ObradaKlijentskihZahteva;
 
 /**
  *
@@ -18,14 +19,12 @@ public class Server {
 
     public void startServer(){
         
-    }
-    
-    public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(9000);
-            System.out.println("Server is up and running");
+            System.out.println("Server ceka klijente...");
             while(true){
                 Socket clientSocket = serverSocket.accept();
+                System.out.println("Klijent: "+clientSocket + " se konektovao.");
                 ObradaKlijentskihZahteva okz = new ObradaKlijentskihZahteva(clientSocket);
                 okz.start();
             }
@@ -33,5 +32,9 @@ public class Server {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    }
     
-}
+   
+        
+    
+
