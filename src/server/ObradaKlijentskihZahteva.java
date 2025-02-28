@@ -32,7 +32,7 @@ public class ObradaKlijentskihZahteva extends Thread {
 
     @Override
     public void run() {
-        
+        while(true){
         try {
             Request request = (Request) receiver.receive();
             Response response = new Response();
@@ -48,7 +48,16 @@ public class ObradaKlijentskihZahteva extends Thread {
                     Instruktor in = (Instruktor) request.getArgument();
                     response.setResult(Controller.getInstance().register(in));
                     break;
-               
+                case Operation.EDIT_INSTRUKTOR:
+                    System.out.println("Operacija izmeni instruktor");
+                    Instruktor ins = (Instruktor) request.getArgument();
+                    response.setResult(Controller.getInstance().izmeniInstruktor(ins));
+                    break;
+                case Operation.DELETE_INSTRUKTOR:
+                    System.out.println("Operacija obrisi instruktor");
+                    Instruktor inst = (Instruktor) request.getArgument();
+                    response.setResult(Controller.getInstance().obrisiInstruktor(inst));
+                    break;
             }
             }catch(Exception ex){
                 response.setException(ex);
@@ -56,6 +65,7 @@ public class ObradaKlijentskihZahteva extends Thread {
             sender.send(response);
         } catch (Exception ex) {
             Logger.getLogger(ObradaKlijentskihZahteva.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
         
     }

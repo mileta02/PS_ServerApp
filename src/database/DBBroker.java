@@ -48,6 +48,38 @@ public class DBBroker {
         
         
     }
+    
+    public OpstiDomenskiObjekat update(OpstiDomenskiObjekat odo) throws Exception{
+        
+        try{
+        String query = "UPDATE "+odo.vratiNazivTabele()+ " SET "+odo.vratiVrednostZaIzmenu()+ " WHERE "+odo.vratiPrimarniKljuc();
+            System.out.println(query);
+        Statement st = DBConnection.getInstance().getConnection().createStatement();
+        int affRows = st.executeUpdate(query);
+        if(affRows==1)
+            return odo;
+        else
+            throw new Exception("Problem sa podacima, nije nista izmenjeno.");
+        }catch(SQLException ex){
+            System.out.println("Neuspesno izvrsavanje upita prilikom azuriranja podataka.");
+            throw ex;
+        }
+    }
+    
+    public boolean delete(OpstiDomenskiObjekat odo) throws Exception{
+        try{
+        String query = "DELETE FROM "+odo.vratiNazivTabele()+" WHERE "+odo.vratiPrimarniKljuc();
+        PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+        int affRows = ps.executeUpdate();
+        if(affRows==1)
+            return true;
+        else
+            throw new Exception("Problem sa podacima, instruktor nije obrisan.");
+        }catch(SQLException ex){
+            System.out.println("Neuspesno izvrsavanje upita prilikom brisanja iz baze.");
+            throw ex;
+            }
+    }
     /*
     public Instruktor login(Instruktor i) throws Exception {
     

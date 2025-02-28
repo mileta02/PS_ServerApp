@@ -53,5 +53,14 @@ public class Controller {
        
     }
 
+    public Object izmeniInstruktor(Instruktor ins) throws Exception {
+        return  (Instruktor) broker.update(ins);
+        
+    }
+
+    public Object obrisiInstruktor(Instruktor inst) throws Exception {
+        return broker.delete(inst);
+    }
+
     
 }
