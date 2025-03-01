@@ -10,6 +10,7 @@ import communication.Request;
 import communication.Response;
 import communication.Sender;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import logic.Controller;
@@ -51,12 +52,17 @@ public class ObradaKlijentskihZahteva extends Thread {
                 case Operation.EDIT_INSTRUKTOR:
                     System.out.println("Operacija izmeni instruktor");
                     Instruktor ins = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().izmeniInstruktor(ins));
+                    response.setResult(Controller.getInstance().editInstructor(ins));
                     break;
                 case Operation.DELETE_INSTRUKTOR:
                     System.out.println("Operacija obrisi instruktor");
                     Instruktor inst = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().obrisiInstruktor(inst));
+                    response.setResult(Controller.getInstance().deleteInstructor(inst));
+                    break;
+                case Operation.VRATI_LISTU_INSTRUKTOR:
+                    System.out.println("Operacija vrati listu instruktora.");
+                    Instruktor instr = (Instruktor) request.getArgument();
+                    response.setResult(Controller.getInstance().getInstructorList(instr));
                     break;
             }
             }catch(Exception ex){

@@ -53,13 +53,17 @@ public class Controller {
        
     }
 
-    public Object izmeniInstruktor(Instruktor ins) throws Exception {
+    public Object editInstructor(Instruktor ins) throws Exception {
         return  (Instruktor) broker.update(ins);
         
     }
 
-    public Object obrisiInstruktor(Instruktor inst) throws Exception {
+    public Object deleteInstructor(Instruktor inst) throws Exception {
         return broker.delete(inst);
+    }
+
+    public Object getInstructorList(Instruktor instr) throws Exception {
+        return broker.read(instr);
     }
 
     
