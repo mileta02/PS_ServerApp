@@ -8,6 +8,10 @@ import model.Instruktor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.InstruktorLicenca;
+import model.Licenca;
 import model.OpstiDomenskiObjekat;
 /**
  *
@@ -29,6 +33,22 @@ public class DBBroker {
         rs.close();
         
         System.out.println("Vracanje liste.");
+        return list;
+    }
+    
+    public List<OpstiDomenskiObjekat> readWithCondition(OpstiDomenskiObjekat odo) throws Exception {
+        List<OpstiDomenskiObjekat> list = new ArrayList<>();
+        
+        String query = "SELECT * FROM "+odo.vratiNazivTabele()+" WHERE "+odo.vratiUslovNadjiSlogove();
+        System.out.println(query);
+        Statement st = DBConnection.getInstance().getConnection().createStatement();
+        ResultSet rs = st.executeQuery(query);
+        list = odo.vratiListu(rs);
+        
+        st.close();
+        rs.close();
+        
+        System.out.println("Vracanje liste sa filterom.");
         return list;
     }
     
@@ -80,61 +100,45 @@ public class DBBroker {
             throw ex;
             }
     }
-    /*
-    public Instruktor login(Instruktor i) throws Exception {
     
+    public boolean doesExist(OpstiDomenskiObjekat odo) throws Exception{
         try{
-        String query = "Select * from "+i.vratiNazivTabele()+" where korisnickoIme=? and sifra=?;";
-        PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
-        ps.setString(1, i.getKorisnickoIme());
-        ps.setString(2, i.getSifra());
-        
-        ResultSet rs = ps.executeQuery();
-        if(rs.next()){
-            i.setIdInstruktor(rs.getInt("idInstruktor"));
-            i.setIme(rs.getString("ime"));
-            i.setPrezime(rs.getString("prezime"));
-            i.setKontakt(rs.getString("kontakt"));
-        }else 
-        {
-            throw new Exception("Korisnik ne postoji!");
+            String query = "SELECT * FROM "+odo.vratiPrimarniKljuc()+" WHERE "+odo.vratiPrimarniKljuc();
+            Statement st = DBConnection.getInstance().getConnection().createStatement();
+            ResultSet rs = st.executeQuery(query);
+            if(rs.next())
+                return true;
+            st.close();
+            rs.close();
+        }catch(SQLException ex) {
+            System.out.println("Neuspesna provera postojanja");
         }
-        rs.close();
-        ps.close();
-        System.out.println("Uspesno ucitavanje objekta User iz baze!");
-        return i;
-        }catch(SQLException e){
-            System.out.println("Neuspesno citanje korisnika iz baze.");
-            throw e;
-        }
-
+        return false;
     }
 
-    public Instruktor register(Instruktor in) throws Exception {
-        try{
-        String query = "INSERT INTO "+in.vratiNazivTabele()+in.vratiKoloneZaUbacivanje()+" VALUES "+in.vratiVrednostZaUbacivanje();
-        PreparedStatement st = DBConnection.getInstance().getConnection().prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-        int ar = st.executeUpdate();
-        if(ar==1){
-            
-            ResultSet rs = st.getGeneratedKeys();
-            if(rs.next()){
-                int key = rs.getInt(1);
-                in.setIdInstruktor(key);
+    public List<InstruktorLicenca> readInstruktorWithLicenca(Instruktor i) throws Exception {
+        List<InstruktorLicenca> list = new ArrayList<>();
+        String query = "SELECT zvanjeInstruktora,nazivLicence,idLicenca,datumSticanja FROM instruktorlicenca il JOIN instruktor i "
+                + "ON il.instruktor JOIN licenca l ON il.licenca=l.idLicenca = i.idInstruktor WHERE instruktor=?;";
+        PreparedStatement ps;
+        try {
+            ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, i.getIdInstruktor());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String naziv = rs.getString("nazivLicence");
+                String zvanje = rs.getString("zvanjeInstruktora");
+                Date datum = rs.getDate("datumSticanja");
+                int idLicenca = rs.getInt("idLicenca");
+                Licenca l = new Licenca(idLicenca, zvanje, naziv);
+                InstruktorLicenca il = new InstruktorLicenca(datum, i, l);
+                list.add(il);
             }
-            System.out.println("Uspešno registrovan instruktor.");
-            return in;
+        } catch (SQLException ex) {
+           throw ex;
         }
-        else{
-            throw new Exception("Greska prilikom insertovanja u bazu.");
-        }
-        }catch(SQLException ex){
-            System.out.println("Neuspesno registrovanje prilikom izvrsavanja upita.");
-            throw ex;
-        }
-        
+        return list;
     }
-    */
+
    
-    
 }

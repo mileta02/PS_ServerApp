@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import logic.Controller;
 import model.Instruktor;
+import model.InstruktorLicenca;
+import model.Licenca;
 
 /**
  *
@@ -40,30 +42,45 @@ public class ObradaKlijentskihZahteva extends Thread {
             try{
             switch(request.getOperation()){
                 case Operation.LOGIN: 
-                    System.out.println("Operacija login");
-                    Instruktor i = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().login(i));
+                    login(request,response);
                     break;
-                case Operation.REGISTER:
-                    System.out.println("Operacija register");
-                    Instruktor in = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().register(in));
+                case Operation.KREIRAJ_INSTRUKTOR:
+                    kreirajInstruktor(request,response);
                     break;
-                case Operation.EDIT_INSTRUKTOR:
-                    System.out.println("Operacija izmeni instruktor");
-                    Instruktor ins = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().editInstructor(ins));
+                case Operation.PROMENI_INSTRUKTOR:
+                    promeniInstruktor(request,response);
                     break;
-                case Operation.DELETE_INSTRUKTOR:
-                    System.out.println("Operacija obrisi instruktor");
-                    Instruktor inst = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().deleteInstructor(inst));
+                case Operation.OBRISI_INSTRUKTOR:
+                    obrisiInstruktor(request,response);
                     break;
-                case Operation.VRATI_LISTU_INSTRUKTOR:
-                    System.out.println("Operacija vrati listu instruktora.");
-                    Instruktor instr = (Instruktor) request.getArgument();
-                    response.setResult(Controller.getInstance().getInstructorList(instr));
+                case Operation.UCITAJ_INSTRUKTOR:
+                    vratiListuSviInstruktor(request,response);
                     break;
+                case Operation.UCITAJ_INSTRUKTOR_FILTER:
+                    vratiListuInstruktor(request,response);
+                    break;
+                case Operation.KREIRAJ_LICENCA:
+                    kreirajLicenca(request,response);
+                    break;
+                case Operation.PROMENI_LICENCA:
+                    promeniLicenca(request,response);
+                    break;
+                case Operation.OBRISI_LICENCA:
+                    obrisiLicenca(request,response);
+                    break;
+                case Operation.UCITAJ_LICENCA:
+                    vratiListuSviLicenca(request,response);
+                    break;
+                case Operation.UCITAJ_INSTRUKTOR_LICENCA_FILTER:
+                    vratiListuInstruktorLicenca(request,response);
+                    break;
+                case Operation.OBRISI_INSTRUKTOR_LICENCA:
+                    obrisiInstruktorLicenca(request, response);
+                    break;
+                case Operation.KREIRAJ_INSTRUKTOR_LICENCA:
+                    kreirajInstruktorLicenca(request, response);
+                    break;
+                        
             }
             }catch(Exception ex){
                 response.setException(ex);
@@ -76,6 +93,83 @@ public class ObradaKlijentskihZahteva extends Thread {
         
     }
     
+    //INSTRUKTOR
+    private void login(Request request, Response response) throws Exception {
+        System.out.println("Operacija login");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().login(i));
+    }
+
+    private void kreirajInstruktor(Request request, Response response) throws Exception {
+        System.out.println("Operacija kreiraj instruktor");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajInstruktor(i));
+    }
+
+    private void promeniInstruktor(Request request, Response response) throws Exception {
+        System.out.println("Operacija promeni instruktor");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().promeniInstruktor(i));
+    }
+
+    private void obrisiInstruktor(Request request, Response response) throws Exception {
+
+        System.out.println("Operacija obrisi instruktor");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiInstruktor(i));    
+    }
+
+    private void vratiListuSviInstruktor(Request request, Response response) throws Exception {
+        System.out.println("Operacija vrati listu instruktora.");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSviInstruktor(i));
+    }
+
+    private void vratiListuInstruktor(Request request, Response response) throws Exception {
+        System.out.println("Operacija vrati listu instruktora sa filterom.");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuInstruktor(i));
+    }
+
+    //LICENCA
+    private void kreirajLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija kreiraj licencu");
+        Licenca l = (Licenca) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajLicenca(l));
+    }
+
+    private void promeniLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija promeni licencu");
+        Licenca l = (Licenca) request.getArgument();
+        response.setResult(Controller.getInstance().promeniLicenca(l));    }
+
+    private void obrisiLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija obrisi licencu");
+        Licenca l = (Licenca) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiLicenca(l));
+    }
+
+    private void vratiListuSviLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija vrati listu licenci");
+        Licenca l = (Licenca) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSviLicenca(l));    }
     
-    
+    //INSTRUKTORLICENCA
+    private void vratiListuInstruktorLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija vracanje licenci instruktora");
+        Instruktor i = (Instruktor) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuInstruktorLicenca(i));
+    }
+
+    private void obrisiInstruktorLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija brisanja licenci instruktora");
+        InstruktorLicenca il = (InstruktorLicenca) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiInstruktorLicenca(il));
+    }
+
+    private void kreirajInstruktorLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija dodavanja licenci instruktoru");
+        InstruktorLicenca il = (InstruktorLicenca) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajInstruktorLicenca(il));
+        }
 }

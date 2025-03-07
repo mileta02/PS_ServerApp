@@ -8,6 +8,8 @@ import database.DBBroker;
 import java.util.ArrayList;
 import java.util.List;
 import model.Instruktor;
+import model.InstruktorLicenca;
+import model.Licenca;
 import model.OpstiDomenskiObjekat;
 
 /**
@@ -27,7 +29,7 @@ public class Controller {
             instance = new Controller();
         return instance;
     }
-
+    //INSTRUKTOR SO
     public Instruktor login(Instruktor i) throws Exception {
         
       List<OpstiDomenskiObjekat> odoList = broker.read(i);
@@ -45,25 +47,58 @@ public class Controller {
       
     }
 
-    public Instruktor register(Instruktor in) throws Exception {
+    public Instruktor kreirajInstruktor(Instruktor in) throws Exception {
         if(broker.create(in)){
             return in;
         }
-        throw new Exception("Korisnik nije dobro unetio podatke.");
+        throw new Exception("Korisnik nije dobro uneo podatke.");
        
     }
 
-    public Object editInstructor(Instruktor ins) throws Exception {
+    public Instruktor promeniInstruktor(Instruktor ins) throws Exception {
         return  (Instruktor) broker.update(ins);
         
     }
 
-    public Object deleteInstructor(Instruktor inst) throws Exception {
+    public boolean obrisiInstruktor(Instruktor inst) throws Exception {
         return broker.delete(inst);
     }
 
-    public Object getInstructorList(Instruktor instr) throws Exception {
+    public Object vratiListuSviInstruktor(Instruktor instr) throws Exception {
         return broker.read(instr);
+    }
+
+    public Object vratiListuInstruktor(Instruktor instru) throws Exception {
+        return broker.readWithCondition(instru);
+    }
+
+    public boolean kreirajLicenca(Licenca l) throws Exception {
+        return broker.create(l);
+    }
+
+    public Licenca promeniLicenca(Licenca l) throws Exception {
+        return (Licenca) broker.update(l);
+    }
+
+    public boolean obrisiLicenca(Licenca l) throws Exception {
+        return broker.delete(l);
+    }
+
+    public Object vratiListuSviLicenca(Licenca l) throws Exception {
+        return broker.read(l);
+    }
+    
+    //INSTRUKTORLICENCA SO
+    public List<InstruktorLicenca> vratiListuInstruktorLicenca(Instruktor i) throws Exception {
+        return broker.readInstruktorWithLicenca(i);
+    }
+
+    public boolean obrisiInstruktorLicenca(InstruktorLicenca il) throws Exception {
+        return broker.delete(il);
+    }
+
+    public Object kreirajInstruktorLicenca(InstruktorLicenca il) throws Exception {
+        return broker.create(il);
     }
 
     
