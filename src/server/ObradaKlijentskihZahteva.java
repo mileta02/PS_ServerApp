@@ -17,6 +17,7 @@ import logic.Controller;
 import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
+import model.NivoSkijanja;
 
 /**
  *
@@ -72,6 +73,9 @@ public class ObradaKlijentskihZahteva extends Thread {
                     vratiListuSviLicenca(request,response);
                     break;
                 case Operation.UCITAJ_INSTRUKTOR_LICENCA_FILTER:
+                    vratiListuInstruktorLicencaFilter(request,response);
+                    break;
+                case Operation.UCITAJ_INSTRUKTOR_LICENCA:
                     vratiListuInstruktorLicenca(request,response);
                     break;
                 case Operation.OBRISI_INSTRUKTOR_LICENCA:
@@ -79,6 +83,21 @@ public class ObradaKlijentskihZahteva extends Thread {
                     break;
                 case Operation.KREIRAJ_INSTRUKTOR_LICENCA:
                     kreirajInstruktorLicenca(request, response);
+                    break;
+                case Operation.KREIRAJ_NIVO_SKIJANJA:
+                    kreirajNivoSkijanja(request,response);
+                    break;
+                case Operation.UCITAJ_NIVO_SKIJANJA:
+                    vratiListuSviNivoSkijanja(request,response);
+                    break;
+                case Operation.UCITAJ_NIVO_SKIJANJA_FILTER:
+                    vratiListuNivoSkijanja(request,response);
+                    break;
+                case Operation.OBRISI_NIVO_SKIJANJA:
+                    obrisiNivoSkijanja(request,response);
+                    break;
+                case Operation.PROMENI_NIVO_SKIJANJA:
+                    promeniNivoSkijanja(request,response);
                     break;
                         
             }
@@ -154,13 +173,19 @@ public class ObradaKlijentskihZahteva extends Thread {
         Licenca l = (Licenca) request.getArgument();
         response.setResult(Controller.getInstance().vratiListuSviLicenca(l));    }
     
-    //INSTRUKTORLICENCA
+    //INSTRUKTOR_LICENCA
     private void vratiListuInstruktorLicenca(Request request, Response response) throws Exception {
         System.out.println("Operacija vracanje licenci instruktora");
         Instruktor i = (Instruktor) request.getArgument();
         response.setResult(Controller.getInstance().vratiListuInstruktorLicenca(i));
     }
-
+    
+    private void vratiListuInstruktorLicencaFilter(Request request, Response response) throws Exception {
+        System.out.println("Operacija vracanje licenci instruktora sa filterom");
+        InstruktorLicenca il = (InstruktorLicenca) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuInstruktorLicencaFilter(il));
+    }
+    
     private void obrisiInstruktorLicenca(Request request, Response response) throws Exception {
         System.out.println("Operacija brisanja licenci instruktora");
         InstruktorLicenca il = (InstruktorLicenca) request.getArgument();
@@ -172,4 +197,34 @@ public class ObradaKlijentskihZahteva extends Thread {
         InstruktorLicenca il = (InstruktorLicenca) request.getArgument();
         response.setResult(Controller.getInstance().kreirajInstruktorLicenca(il));
         }
+
+    //NIVO_SKIJANJA
+    private void kreirajNivoSkijanja(Request request, Response response) throws Exception{
+        System.out.println("Operacija kreiraj nivo skijanja");
+        NivoSkijanja ns = (NivoSkijanja) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajNivoSkijanja(ns));
+    }
+    private void vratiListuSviNivoSkijanja(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu nivo skijanja");
+        NivoSkijanja ns = (NivoSkijanja) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSviNivoSkijanja(ns));
+    }
+
+    private void vratiListuNivoSkijanja(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu nivo skijanja sa filterom");
+        NivoSkijanja ns = (NivoSkijanja) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuNivoSkijanja(ns));
+    }
+
+    private void obrisiNivoSkijanja(Request request, Response response) throws Exception{
+        System.out.println("Operacija obrisi nivo skijanja");
+        NivoSkijanja ns = (NivoSkijanja) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiNivoSkijanja(ns));
+    }
+
+    private void promeniNivoSkijanja(Request request, Response response) throws Exception{
+        System.out.println("Operacija promeni nivo skijanja");
+        NivoSkijanja ns = (NivoSkijanja) request.getArgument();
+        response.setResult(Controller.getInstance().promeniNivoSkijanja(ns));
+    }
 }

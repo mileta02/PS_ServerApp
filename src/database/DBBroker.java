@@ -89,6 +89,7 @@ public class DBBroker {
     public boolean delete(OpstiDomenskiObjekat odo) throws Exception{
         try{
         String query = "DELETE FROM "+odo.vratiNazivTabele()+" WHERE "+odo.vratiPrimarniKljuc();
+            System.out.println(query);
         PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
         int affRows = ps.executeUpdate();
         if(affRows==1)
@@ -119,12 +120,13 @@ public class DBBroker {
     public List<InstruktorLicenca> readInstruktorWithLicenca(Instruktor i) throws Exception {
         List<InstruktorLicenca> list = new ArrayList<>();
         String query = "SELECT zvanjeInstruktora,nazivLicence,idLicenca,datumSticanja FROM instruktorlicenca il JOIN instruktor i "
-                + "ON il.instruktor JOIN licenca l ON il.licenca=l.idLicenca = i.idInstruktor WHERE instruktor=?;";
+                + "ON il.instruktor=i.idInstruktor JOIN licenca l ON il.licenca=l.idLicenca WHERE instruktor=?";
         PreparedStatement ps;
         try {
             ps = DBConnection.getInstance().getConnection().prepareStatement(query);
             ps.setInt(1, i.getIdInstruktor());
             ResultSet rs = ps.executeQuery();
+            
             while(rs.next()){
                 String naziv = rs.getString("nazivLicence");
                 String zvanje = rs.getString("zvanjeInstruktora");
@@ -134,6 +136,33 @@ public class DBBroker {
                 InstruktorLicenca il = new InstruktorLicenca(datum, i, l);
                 list.add(il);
             }
+        } catch (SQLException ex) {
+           throw ex;
+        }
+        return list;
+    }
+    
+    public List<InstruktorLicenca> readInstruktorWithLicencaWithCondition(InstruktorLicenca il) throws Exception {
+        List<InstruktorLicenca> list = new ArrayList<>();
+        String query = "SELECT zvanjeInstruktora,nazivLicence,idLicenca,datumSticanja FROM instruktorlicenca il JOIN instruktor i "
+                + "ON il.instruktor=i.idInstruktor JOIN licenca l ON il.licenca=l.idLicenca WHERE instruktor=? AND nazivLicence LIKE ?;";
+        PreparedStatement ps;
+        try {
+            ps = DBConnection.getInstance().getConnection().prepareStatement(query);
+            ps.setInt(1, il.getInstruktor().getIdInstruktor());
+            ps.setString(2,il.getLicenca().getNazivLicence()+"%");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String naziv = rs.getString("nazivLicence");
+                String zvanje = rs.getString("zvanjeInstruktora");
+                Date datum = rs.getDate("datumSticanja");
+                int idLicenca = rs.getInt("idLicenca");
+                Licenca l = new Licenca(idLicenca, zvanje, naziv);
+                InstruktorLicenca i = new InstruktorLicenca(datum, il.getInstruktor() , l);
+                list.add(i);
+            }
+            rs.close();
+            ps.close();
         } catch (SQLException ex) {
            throw ex;
         }

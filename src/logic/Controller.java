@@ -10,6 +10,7 @@ import java.util.List;
 import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
+import model.NivoSkijanja;
 import model.OpstiDomenskiObjekat;
 
 /**
@@ -92,13 +93,40 @@ public class Controller {
     public List<InstruktorLicenca> vratiListuInstruktorLicenca(Instruktor i) throws Exception {
         return broker.readInstruktorWithLicenca(i);
     }
+    
+    public Object vratiListuInstruktorLicencaFilter(InstruktorLicenca il) throws Exception {
+        return broker.readInstruktorWithLicencaWithCondition(il);
+    }
 
     public boolean obrisiInstruktorLicenca(InstruktorLicenca il) throws Exception {
         return broker.delete(il);
     }
 
-    public Object kreirajInstruktorLicenca(InstruktorLicenca il) throws Exception {
+    public boolean kreirajInstruktorLicenca(InstruktorLicenca il) throws Exception {
         return broker.create(il);
+    }
+    
+    //NIVO_SKIJANJA
+    public boolean kreirajNivoSkijanja(NivoSkijanja ns) throws Exception {
+        return broker.create(ns);
+    }
+
+    public Object vratiListuSviNivoSkijanja(NivoSkijanja ns) throws Exception {
+        return broker.read(ns);
+    }
+
+    public Object vratiListuNivoSkijanja(NivoSkijanja ns) throws Exception {
+        return broker.readWithCondition(ns);
+    }
+
+    public boolean obrisiNivoSkijanja(NivoSkijanja ns) throws Exception {
+        return broker.delete(ns);
+    }
+
+    public Object promeniNivoSkijanja(NivoSkijanja ns) throws Exception {
+        if(broker.update(ns)!=null)
+            return true;
+        return false;
     }
 
     
