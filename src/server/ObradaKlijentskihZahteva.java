@@ -18,6 +18,7 @@ import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
 import model.NivoSkijanja;
+import model.TipTermina;
 
 /**
  *
@@ -98,6 +99,21 @@ public class ObradaKlijentskihZahteva extends Thread {
                     break;
                 case Operation.PROMENI_NIVO_SKIJANJA:
                     promeniNivoSkijanja(request,response);
+                    break;
+                case Operation.KREIRAJ_TIP_TERMINA:
+                    kreirajTipTermina(request,response);
+                    break;
+                case Operation.UCITAJ_TIP_TERMINA:
+                    vratiListuSviTipTermina(request,response);
+                    break;
+                case Operation.UCITAJ_TIP_TERMINA_FILTER:
+                    vratiListuTipTermina(request,response);
+                    break;
+                case Operation.PROMENI_TIP_TERMINA:
+                    promeniTipTermina(request,response);
+                    break;
+                case Operation.OBRISI_TIP_TERMINA:
+                    obrisiTipTermina(request,response);
                     break;
                         
             }
@@ -226,5 +242,36 @@ public class ObradaKlijentskihZahteva extends Thread {
         System.out.println("Operacija promeni nivo skijanja");
         NivoSkijanja ns = (NivoSkijanja) request.getArgument();
         response.setResult(Controller.getInstance().promeniNivoSkijanja(ns));
+    }
+    
+    //TIP_TERMINA
+    private void kreirajTipTermina(Request request, Response response) throws Exception{
+        System.out.println("Operacija kreiraj tip termina");
+        TipTermina tt = (TipTermina) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajTipTermina(tt));
+    }
+
+    private void vratiListuTipTermina(Request request, Response response) throws Exception {
+        System.out.println("Operacija vrati listu tipova termina sa filterom");
+        TipTermina tt = (TipTermina) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuTipTermina(tt));
+    }
+
+    private void vratiListuSviTipTermina(Request request, Response response) throws Exception {
+        System.out.println("Operacija vrati listu svih tipova termina");
+        TipTermina tt = (TipTermina) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSviTipTermina(tt));
+    }
+
+    private void promeniTipTermina(Request request, Response response) throws Exception{
+        System.out.println("Operacija promeni tip termina");
+        TipTermina tt = (TipTermina) request.getArgument();
+        response.setResult(Controller.getInstance().promeniTipTermina(tt));
+    }
+
+    private void obrisiTipTermina(Request request, Response response) throws Exception{
+        System.out.println("Operacija obrisi tip termina");
+        TipTermina tt = (TipTermina) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiTipTermina(tt));
     }
 }

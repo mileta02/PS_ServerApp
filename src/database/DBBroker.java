@@ -47,7 +47,7 @@ public class DBBroker {
         
         st.close();
         rs.close();
-        
+        System.out.println(query);
         System.out.println("Vracanje liste sa filterom.");
         return list;
     }
@@ -69,15 +69,15 @@ public class DBBroker {
         
     }
     
-    public OpstiDomenskiObjekat update(OpstiDomenskiObjekat odo) throws Exception{
+    public boolean update(OpstiDomenskiObjekat odo) throws Exception{
         
         try{
         String query = "UPDATE "+odo.vratiNazivTabele()+ " SET "+odo.vratiVrednostZaIzmenu()+ " WHERE "+odo.vratiPrimarniKljuc();
-            System.out.println(query);
+        System.out.println(query);
         Statement st = DBConnection.getInstance().getConnection().createStatement();
         int affRows = st.executeUpdate(query);
-        if(affRows==1)
-            return odo;
+        if(affRows>0)
+            return true;
         else
             throw new Exception("Problem sa podacima, nije nista izmenjeno.");
         }catch(SQLException ex){

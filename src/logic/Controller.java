@@ -12,6 +12,7 @@ import model.InstruktorLicenca;
 import model.Licenca;
 import model.NivoSkijanja;
 import model.OpstiDomenskiObjekat;
+import model.TipTermina;
 
 /**
  *
@@ -56,8 +57,9 @@ public class Controller {
        
     }
 
-    public Instruktor promeniInstruktor(Instruktor ins) throws Exception {
-        return  (Instruktor) broker.update(ins);
+    public boolean promeniInstruktor(Instruktor ins) throws Exception {
+        return broker.update(ins);
+        
         
     }
 
@@ -77,8 +79,8 @@ public class Controller {
         return broker.create(l);
     }
 
-    public Licenca promeniLicenca(Licenca l) throws Exception {
-        return (Licenca) broker.update(l);
+    public boolean promeniLicenca(Licenca l) throws Exception {
+        return  broker.update(l);
     }
 
     public boolean obrisiLicenca(Licenca l) throws Exception {
@@ -123,10 +125,28 @@ public class Controller {
         return broker.delete(ns);
     }
 
-    public Object promeniNivoSkijanja(NivoSkijanja ns) throws Exception {
-        if(broker.update(ns)!=null)
-            return true;
-        return false;
+    public boolean promeniNivoSkijanja(NivoSkijanja ns) throws Exception {
+        return broker.update(ns);
+    }
+    
+    //TIP_TERMINA
+    public Object kreirajTipTermina(TipTermina tt) throws Exception {
+        return broker.create(tt);
+    }
+
+    public Object vratiListuSviTipTermina(TipTermina tt) throws Exception {
+        return broker.read(tt);
+    }
+
+    public Object vratiListuTipTermina(TipTermina tt) throws Exception {
+        return broker.readWithCondition(tt);
+    }
+    public Object promeniTipTermina(TipTermina tt) throws Exception {
+        return broker.update(tt);
+    }
+
+    public Object obrisiTipTermina(TipTermina tt) throws Exception {
+        return broker.delete(tt);
     }
 
     
