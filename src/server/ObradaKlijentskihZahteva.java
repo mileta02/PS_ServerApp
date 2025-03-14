@@ -18,6 +18,7 @@ import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
 import model.NivoSkijanja;
+import model.Skijas;
 import model.TipTermina;
 
 /**
@@ -73,6 +74,9 @@ public class ObradaKlijentskihZahteva extends Thread {
                 case Operation.UCITAJ_LICENCA:
                     vratiListuSviLicenca(request,response);
                     break;
+                case Operation.UCITAJ_LICENCA_FILTER:
+                    vratiListuLicenca(request,response);
+                    break;
                 case Operation.UCITAJ_INSTRUKTOR_LICENCA_FILTER:
                     vratiListuInstruktorLicencaFilter(request,response);
                     break;
@@ -114,6 +118,21 @@ public class ObradaKlijentskihZahteva extends Thread {
                     break;
                 case Operation.OBRISI_TIP_TERMINA:
                     obrisiTipTermina(request,response);
+                    break;
+                case Operation.UCITAJ_SKIJAS:
+                    vratiListuSviSkijas(request,response);
+                    break;
+                case Operation.UCITAJ_SKIJAS_FILTER:
+                    vratiListuSkijas(request, response);
+                    break;
+                case Operation.KREIRAJ_SKIJAS:
+                    kreirajSkijas(request,response);
+                    break;
+                case Operation.OBRISI_SKIJAS:
+                    obrisiSkijas(request,response);
+                    break;
+                case Operation.PROMENI_SKIJAS:
+                    promeniSkijas(request,response);
                     break;
                         
             }
@@ -189,6 +208,11 @@ public class ObradaKlijentskihZahteva extends Thread {
         Licenca l = (Licenca) request.getArgument();
         response.setResult(Controller.getInstance().vratiListuSviLicenca(l));    }
     
+    private void vratiListuLicenca(Request request, Response response) throws Exception {
+        System.out.println("Operacija vrati listu licenci");
+        Licenca l = (Licenca) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuLicenca(l));    
+    }
     //INSTRUKTOR_LICENCA
     private void vratiListuInstruktorLicenca(Request request, Response response) throws Exception {
         System.out.println("Operacija vracanje licenci instruktora");
@@ -274,4 +298,38 @@ public class ObradaKlijentskihZahteva extends Thread {
         TipTermina tt = (TipTermina) request.getArgument();
         response.setResult(Controller.getInstance().obrisiTipTermina(tt));
     }
+    
+    //SKIJAS
+
+    private void vratiListuSviSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu svih skijasa.");
+        Skijas s = (Skijas) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSviSkijas(s));
+    }
+
+    private void kreirajSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija kreiraj skijasa.");
+        Skijas s = (Skijas) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajSkijas(s));
+    }
+
+    private void vratiListuSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu skijasa sa filterom.");
+        Skijas s = (Skijas) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSkijas(s));
+    }
+
+    private void obrisiSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija obrisi skijasa.");
+        Skijas s = (Skijas) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiSkijas(s));
+    }
+
+    private void promeniSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija promeni skijasa.");
+        Skijas s = (Skijas) request.getArgument();
+        response.setResult(Controller.getInstance().promeniSkijas(s));
+    }
+
+    
 }

@@ -12,6 +12,7 @@ import model.InstruktorLicenca;
 import model.Licenca;
 import model.NivoSkijanja;
 import model.OpstiDomenskiObjekat;
+import model.Skijas;
 import model.TipTermina;
 
 /**
@@ -74,7 +75,8 @@ public class Controller {
     public Object vratiListuInstruktor(Instruktor instru) throws Exception {
         return broker.readWithCondition(instru);
     }
-
+    //LICENCA
+    
     public boolean kreirajLicenca(Licenca l) throws Exception {
         return broker.create(l);
     }
@@ -89,6 +91,10 @@ public class Controller {
 
     public Object vratiListuSviLicenca(Licenca l) throws Exception {
         return broker.read(l);
+    }
+    
+    public Object vratiListuLicenca(Licenca l) throws Exception {
+        return broker.readWithCondition(l);
     }
     
     //INSTRUKTORLICENCA SO
@@ -148,6 +154,30 @@ public class Controller {
     public Object obrisiTipTermina(TipTermina tt) throws Exception {
         return broker.delete(tt);
     }
+    
+    
+    //SKIJAS
+    public Object vratiListuSviSkijas(Skijas s) throws Exception {
+        return broker.readSkijasWithNivoSkijanja(s);
+    }
+
+    public Object vratiListuSkijas(Skijas s) throws Exception {
+        return broker.readSkijasWithNivoSkijanjaWithCondition(s);
+    }
+
+    public Object kreirajSkijas(Skijas s) throws Exception {
+        return broker.create(s);
+    }
+
+    public Object obrisiSkijas(Skijas s) throws Exception {
+        return broker.delete(s);
+    }
+
+    public Object promeniSkijas(Skijas s) throws Exception {
+        return broker.update(s);
+    }
+
+    
 
     
 }

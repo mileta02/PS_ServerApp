@@ -1,18 +1,19 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package database;
-import java.sql.*;
-import model.Instruktor;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
+import model.NivoSkijanja;
 import model.OpstiDomenskiObjekat;
+import model.Skijas;
 /**
  *
  * @author milan
@@ -32,7 +33,7 @@ public class DBBroker {
         ps.close();
         rs.close();
         
-        System.out.println("Vracanje liste.");
+        System.out.println("Vracanje liste." +list);
         return list;
     }
     
@@ -169,5 +170,53 @@ public class DBBroker {
         return list;
     }
 
+    public List<Skijas> readSkijasWithNivoSkijanja(Skijas s) throws Exception {
+        
+        List<Skijas> list = new ArrayList<>();
+        String query = "SELECT * FROM skijas skijas JOIN nivoskijanja nivoskijanja ON skijas.nivoSkijanja=nivoskijanja.idNivoSkijanja;";
+        Statement st = DBConnection.getInstance().getConnection().createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()){
+            NivoSkijanja ns = new NivoSkijanja();
+            ns = (NivoSkijanja) ns.vratiObjekatIzRs(rs);
+            
+            
+            Skijas sk = new Skijas();
+            sk = (Skijas) sk.vratiObjekatIzRs(rs);
+            sk.setNivoSkijanja(ns);
+            
+
+            list.add(sk);
+        }
+        st.close();
+        rs.close();
+        
+        return list;
+    }
+    
+    public List<Skijas> readSkijasWithNivoSkijanjaWithCondition(Skijas s) throws Exception {
+        
+        List<Skijas> list = new ArrayList<>();
+        String query = "SELECT * FROM skijas skijas JOIN nivoskijanja nivoskijanja ON skijas.nivoSkijanja=nivoskijanja.idNivoSkijanja WHERE "
+                + s.vratiUslovNadjiSlogove()+";";
+        System.out.println(query);
+        Statement st = DBConnection.getInstance().getConnection().createStatement();
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()){
+            NivoSkijanja ns = new NivoSkijanja();
+            ns = (NivoSkijanja) ns.vratiObjekatIzRs(rs);
+            
+            
+            Skijas sk = new Skijas();
+            sk = (Skijas) sk.vratiObjekatIzRs(rs);
+            sk.setNivoSkijanja(ns);
+                            
+            list.add(sk);
+        }
+        st.close();
+        rs.close();
+        
+        return list;
+    }
    
 }
