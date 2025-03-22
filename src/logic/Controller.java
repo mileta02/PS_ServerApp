@@ -13,6 +13,8 @@ import model.Licenca;
 import model.NivoSkijanja;
 import model.OpstiDomenskiObjekat;
 import model.Skijas;
+import model.Termin;
+import model.TerminSkijas;
 import model.TipTermina;
 
 /**
@@ -175,6 +177,46 @@ public class Controller {
 
     public Object promeniSkijas(Skijas s) throws Exception {
         return broker.update(s);
+    }
+    
+    
+    //TERMIN
+    public Object vratiListuSviTermin(Termin t) throws Exception{
+        return broker.readTerminWithInstruktorTip(t);
+    }
+
+    public Object kreirajTermin(Termin t) throws Exception{
+        return broker.create(t);
+    }
+
+    public Object vratiListuTermin(Termin t) throws Exception{
+        return broker.readTerminWithInstruktorWithCondition(t);
+    }
+
+    public Object promeniTermin(Termin t) throws Exception{
+        return broker.update(t);
+    }
+
+    public Object obrisiTermin(Termin t) throws Exception{
+        return broker.delete(t);
+    }
+
+    
+    //TERMIN_SKIJAS
+    public Object vratiListuTerminSkijas(Termin t) throws Exception{
+        return broker.readTerminWithSkijas(t);
+    }
+
+    public Object kreirajTerminSkijas(TerminSkijas t) throws Exception {
+        return broker.create(t);
+    }
+
+    public Object promeniTerminSkijas(TerminSkijas t) throws Exception {
+        return broker.update(t);
+    }
+
+    public Object obrisiTerminSkijas(TerminSkijas t) throws Exception {
+        return broker.delete(t);
     }
 
     

@@ -5,15 +5,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
 import model.NivoSkijanja;
 import model.OpstiDomenskiObjekat;
 import model.Skijas;
+import model.Termin;
+import model.TerminSkijas;
+import model.TipTermina;
 /**
  *
  * @author milan
@@ -131,7 +137,7 @@ public class DBBroker {
             while(rs.next()){
                 String naziv = rs.getString("nazivLicence");
                 String zvanje = rs.getString("zvanjeInstruktora");
-                Date datum = rs.getDate("datumSticanja");
+                LocalDate datum = rs.getDate("datumSticanja").toLocalDate();
                 int idLicenca = rs.getInt("idLicenca");
                 Licenca l = new Licenca(idLicenca, zvanje, naziv);
                 InstruktorLicenca il = new InstruktorLicenca(datum, i, l);
@@ -156,7 +162,7 @@ public class DBBroker {
             while(rs.next()){
                 String naziv = rs.getString("nazivLicence");
                 String zvanje = rs.getString("zvanjeInstruktora");
-                Date datum = rs.getDate("datumSticanja");
+                LocalDate datum = rs.getDate("datumSticanja").toLocalDate();
                 int idLicenca = rs.getInt("idLicenca");
                 Licenca l = new Licenca(idLicenca, zvanje, naziv);
                 InstruktorLicenca i = new InstruktorLicenca(datum, il.getInstruktor() , l);
@@ -218,5 +224,75 @@ public class DBBroker {
         
         return list;
     }
+
+    public List<Termin> readTerminWithInstruktorTip(Termin t) throws Exception{
+        List<Termin> list = new ArrayList<>();
+        String query = "SELECT * FROM termin termin JOIN instruktor instruktor ON termin.instruktor=instruktor.idInstruktor "
+                + "JOIN tiptermina tiptermina ON termin.tip=tiptermina.idTip;";
+        Statement st =  DBConnection.getInstance().getConnection().createStatement();
+                
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()){
+            Termin ter = (Termin) new Termin().vratiObjekatIzRs(rs);
+            Instruktor i = (Instruktor) new Instruktor().vratiObjekatIzRs(rs);
+            TipTermina tip = (TipTermina) new TipTermina().vratiObjekatIzRs(rs);
+            
+            ter.setTipTermina(tip);
+            ter.setInstruktor(i);
+            
+            list.add(ter);
+        }
+        rs.close();
+        st.close();
+        
+        return list;
+    }
+
+    public List<Termin> readTerminWithInstruktorWithCondition(Termin t) throws Exception {
+        List<Termin> list = new ArrayList<>();
+        String query = "SELECT * FROM termin termin JOIN instruktor instruktor ON termin.instruktor=instruktor.idInstruktor "
+                + "JOIN tiptermina tiptermina ON termin.tip=tiptermina.idTip WHERE "+t.vratiUslovNadjiSlogove();
+        Statement st =  DBConnection.getInstance().getConnection().createStatement();
+        System.out.println(query);        
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()){
+            Termin ter = (Termin) new Termin().vratiObjekatIzRs(rs);
+            Instruktor i = (Instruktor) new Instruktor().vratiObjekatIzRs(rs);
+            TipTermina tip = (TipTermina) new TipTermina().vratiObjekatIzRs(rs);
+            
+            ter.setTipTermina(tip);
+            ter.setInstruktor(i);
+            
+            list.add(ter);
+        }
+        rs.close();
+        st.close();
+        
+        return list;
+    }
+
+    public Object readTerminWithSkijas(Termin t) throws Exception {
+        List<TerminSkijas> list = new ArrayList<>();
+        String query = "SELECT * FROM terminskijas terminskijas JOIN skijas skijas ON terminskijas.skijas=skijas.idSkijas "
+                + "JOIN nivoskijanja nivoskijanja ON skijas.nivoSkijanja=nivoskijanja.idNivoSkijanja WHERE termin="+t.getIdTermin()+";";
+                Statement st =  DBConnection.getInstance().getConnection().createStatement();
+        System.out.println(query);        
+        ResultSet rs = st.executeQuery(query);
+        while(rs.next()){
+            Skijas s = (Skijas) new Skijas().vratiObjekatIzRs(rs);
+            NivoSkijanja ns = (NivoSkijanja) new NivoSkijanja().vratiObjekatIzRs(rs);
+            s.setNivoSkijanja(ns);
+            LocalDate datum = rs.getDate("datumPrijave").toLocalDate();
+            TerminSkijas ts = new TerminSkijas(s, t, datum);
+            System.out.println(ts);
+            list.add(ts);
+        }
+        rs.close();
+        st.close();
+        
+        return list;
+    }
+    
+    
    
 }

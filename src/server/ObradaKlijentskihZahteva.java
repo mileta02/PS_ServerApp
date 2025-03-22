@@ -19,6 +19,8 @@ import model.InstruktorLicenca;
 import model.Licenca;
 import model.NivoSkijanja;
 import model.Skijas;
+import model.Termin;
+import model.TerminSkijas;
 import model.TipTermina;
 
 /**
@@ -134,6 +136,33 @@ public class ObradaKlijentskihZahteva extends Thread {
                 case Operation.PROMENI_SKIJAS:
                     promeniSkijas(request,response);
                     break;
+                case Operation.UCITAJ_TERMIN:
+                    vratiListuSviTermin(request,response);
+                    break;
+                case Operation.UCITAJ_TERMIN_FILTER:
+                    vratiListuTermin(request,response);
+                    break;
+                case Operation.KREIRAJ_TERMIN:
+                    kreirajTermin(request,response);
+                    break;
+                case Operation.PROMENI_TERMIN:
+                    promeniTermin(request,response);
+                    break;
+                case Operation.OBRISI_TERMIN:
+                    obrisiTermin(request,response);
+                    break;
+                case Operation.UCITAJ_TERMIN_SKIJAS:
+                    vratiListuTerminSkijas(request,response);
+                    break;
+                case Operation.KREIRAJ_TERMIN_SKIJAS:
+                    kreirajTerminSkijas(request,response);
+                    break;
+                case Operation.PROMENI_TERMIN_SKIJAS:
+                    promeniTerminSkijas(request,response);
+                    break;
+                case Operation.OBRISI_TERMIN_SKIJAS:
+                    obrisiTerminSkijas(request,response);
+                    
                         
             }
             }catch(Exception ex){
@@ -329,6 +358,63 @@ public class ObradaKlijentskihZahteva extends Thread {
         System.out.println("Operacija promeni skijasa.");
         Skijas s = (Skijas) request.getArgument();
         response.setResult(Controller.getInstance().promeniSkijas(s));
+    }
+    
+    //TERMIN
+    private void vratiListuSviTermin(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu svih termina.");
+        Termin t = (Termin) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuSviTermin(t));
+    }
+
+    private void kreirajTermin(Request request, Response response) throws Exception{
+        System.out.println("Operacija kreiraj termin.");
+        Termin t = (Termin) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajTermin(t));
+    }
+
+    private void vratiListuTermin(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu termina sa filterom.");
+        Termin t = (Termin) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuTermin(t));
+    }
+
+    private void promeniTermin(Request request, Response response) throws Exception{
+        System.out.println("Operacija promeni termin.");
+        Termin t = (Termin) request.getArgument();
+        response.setResult(Controller.getInstance().promeniTermin(t));
+    }
+
+    private void obrisiTermin(Request request, Response response) throws Exception{
+        System.out.println("Operacija obrisi termin.");
+        Termin t = (Termin) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiTermin(t));
+    }
+
+    
+    //TERMIN_SKIJAS
+    private void vratiListuTerminSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija vrati listu termin skijas.");
+        Termin t = (Termin) request.getArgument();
+        response.setResult(Controller.getInstance().vratiListuTerminSkijas(t));
+    }
+
+    private void kreirajTerminSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija kreiraj termin skijas.");
+        TerminSkijas t = (TerminSkijas) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajTerminSkijas(t));
+    }
+
+    private void promeniTerminSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija promeni termin skijas.");
+        TerminSkijas t = (TerminSkijas) request.getArgument();
+        response.setResult(Controller.getInstance().promeniTerminSkijas(t));
+    }
+
+    private void obrisiTerminSkijas(Request request, Response response) throws Exception{
+        System.out.println("Operacija obrisi termin skijas.");
+        TerminSkijas t = (TerminSkijas) request.getArgument();
+        response.setResult(Controller.getInstance().obrisiTerminSkijas(t));
     }
 
     
