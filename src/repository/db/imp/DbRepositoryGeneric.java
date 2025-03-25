@@ -1,16 +1,17 @@
-package database;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package repository.db.imp;
 
-import java.sql.Connection;
+import connection.DBConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Instruktor;
 import model.InstruktorLicenca;
 import model.Licenca;
@@ -20,21 +21,22 @@ import model.Skijas;
 import model.Termin;
 import model.TerminSkijas;
 import model.TipTermina;
+import repository.db.DbRepository;
+
 /**
  *
  * @author milan
  */
-public class DBBroker {
+public class DbRepositoryGeneric implements DbRepository<OpstiDomenskiObjekat>{
 
-    
-    public List<OpstiDomenskiObjekat> read(OpstiDomenskiObjekat odo) throws Exception{
-        
+    @Override
+    public List<OpstiDomenskiObjekat> read(OpstiDomenskiObjekat param) throws Exception{
         List<OpstiDomenskiObjekat> list = new ArrayList<>();
         
-        String query = "SELECT * FROM "+odo.vratiNazivTabele();
+        String query = "SELECT * FROM "+param.vratiNazivTabele();
         PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
         ResultSet rs = ps.executeQuery();
-        list = odo.vratiListu(rs);
+        list = param.vratiListu(rs);
         
         ps.close();
         rs.close();
@@ -42,15 +44,16 @@ public class DBBroker {
         System.out.println("Vracanje liste." +list);
         return list;
     }
-    
-    public List<OpstiDomenskiObjekat> readWithCondition(OpstiDomenskiObjekat odo) throws Exception {
+
+    @Override
+    public List<OpstiDomenskiObjekat> readWithCondition(OpstiDomenskiObjekat param) throws Exception{
         List<OpstiDomenskiObjekat> list = new ArrayList<>();
         
-        String query = "SELECT * FROM "+odo.vratiNazivTabele()+" WHERE "+odo.vratiUslovNadjiSlogove();
+        String query = "SELECT * FROM "+param.vratiNazivTabele()+" WHERE "+param.vratiUslovNadjiSlogove();
         System.out.println(query);
         Statement st = DBConnection.getInstance().getConnection().createStatement();
         ResultSet rs = st.executeQuery(query);
-        list = odo.vratiListu(rs);
+        list = param.vratiListu(rs);
         
         st.close();
         rs.close();
@@ -58,73 +61,77 @@ public class DBBroker {
         System.out.println("Vracanje liste sa filterom.");
         return list;
     }
-    
-    public boolean create(OpstiDomenskiObjekat odo) throws Exception{
+
+    @Override
+    public boolean create(OpstiDomenskiObjekat param) throws Exception{
         try{
             
-            String query = "INSERT INTO "+odo.vratiNazivTabele()+odo.vratiKoloneZaUbacivanje()+" VALUES"+odo.vratiVrednostZaUbacivanje();
+            String query = "INSERT INTO "+param.vratiNazivTabele()+param.vratiKoloneZaUbacivanje()+" VALUES"+param.vratiVrednostZaUbacivanje();
             PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query,PreparedStatement.RETURN_GENERATED_KEYS);
             int affRows = ps.executeUpdate();
-            
-            return affRows==1;
+            ps.close();
+            return affRows>0;
         }catch(SQLException ex){
-            System.out.println("Neuspesno izvrsavanja upita u brokeru.");
+            System.out.println("Neuspesno izvrsavanja upita create u brokeru.");
             throw ex;
         }
-        
-        
-        
     }
-    
-    public boolean update(OpstiDomenskiObjekat odo) throws Exception{
-        
+
+    @Override
+    public boolean update(OpstiDomenskiObjekat param) throws Exception{
         try{
-        String query = "UPDATE "+odo.vratiNazivTabele()+ " SET "+odo.vratiVrednostZaIzmenu()+ " WHERE "+odo.vratiPrimarniKljuc();
+        String query = "UPDATE "+param.vratiNazivTabele()+ " SET "+param.vratiVrednostZaIzmenu()+ " WHERE "+param.vratiPrimarniKljuc();
         System.out.println(query);
         Statement st = DBConnection.getInstance().getConnection().createStatement();
         int affRows = st.executeUpdate(query);
+        st.close();
         if(affRows>0)
             return true;
         else
-            throw new Exception("Problem sa podacima, nije nista izmenjeno.");
+            return false;
         }catch(SQLException ex){
-            System.out.println("Neuspesno izvrsavanje upita prilikom azuriranja podataka.");
+            System.out.println("Neuspesno izvrsavanje upita azuriranja podataka.");
             throw ex;
         }
     }
-    
-    public boolean delete(OpstiDomenskiObjekat odo) throws Exception{
+
+    @Override
+    public boolean delete(OpstiDomenskiObjekat param) throws Exception{
         try{
-        String query = "DELETE FROM "+odo.vratiNazivTabele()+" WHERE "+odo.vratiPrimarniKljuc();
-            System.out.println(query);
+        String query = "DELETE FROM "+param.vratiNazivTabele()+" WHERE "+param.vratiPrimarniKljuc();
+        System.out.println(query);
         PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(query);
         int affRows = ps.executeUpdate();
-        if(affRows==1)
-            return true;
+        ps.close();
+        if(affRows>0)
+           return true;
         else
-            throw new Exception("Problem sa podacima, instruktor nije obrisan.");
+            return false;
         }catch(SQLException ex){
-            System.out.println("Neuspesno izvrsavanje upita prilikom brisanja iz baze.");
+            System.out.println("Neuspesno izvrsavanje upita  brisanja podataka.");
             throw ex;
             }
     }
-    
-    public boolean doesExist(OpstiDomenskiObjekat odo) throws Exception{
+
+    @Override
+    public boolean doesExist(OpstiDomenskiObjekat param) {
         try{
-            String query = "SELECT * FROM "+odo.vratiPrimarniKljuc()+" WHERE "+odo.vratiPrimarniKljuc();
+            String query = "SELECT * FROM "+param.vratiNazivTabele()+" WHERE "+param.vratiUslovDaPostoji();
             Statement st = DBConnection.getInstance().getConnection().createStatement();
             ResultSet rs = st.executeQuery(query);
+            //System.out.println(query);
             if(rs.next())
                 return true;
             st.close();
             rs.close();
         }catch(SQLException ex) {
-            System.out.println("Neuspesna provera postojanja");
+            System.out.println("Neuspesna provera postojanja objekta.");
         }
         return false;
     }
 
-    public List<InstruktorLicenca> readInstruktorWithLicenca(Instruktor i) throws Exception {
+    @Override
+    public List<InstruktorLicenca> readInstruktorWithLicenca(Instruktor i) {
         List<InstruktorLicenca> list = new ArrayList<>();
         String query = "SELECT zvanjeInstruktora,nazivLicence,idLicenca,datumSticanja FROM instruktorlicenca il JOIN instruktor i "
                 + "ON il.instruktor=i.idInstruktor JOIN licenca l ON il.licenca=l.idLicenca WHERE instruktor=?";
@@ -144,12 +151,13 @@ public class DBBroker {
                 list.add(il);
             }
         } catch (SQLException ex) {
-           throw ex;
+           System.out.println("Greska prilikom citanja Instruktora sa licencom.");
         }
         return list;
     }
-    
-    public List<InstruktorLicenca> readInstruktorWithLicencaWithCondition(InstruktorLicenca il) throws Exception {
+
+    @Override
+    public List<InstruktorLicenca> readInstruktorWithLicencaWithCondition(InstruktorLicenca il) {
         List<InstruktorLicenca> list = new ArrayList<>();
         String query = "SELECT zvanjeInstruktora,nazivLicence,idLicenca,datumSticanja FROM instruktorlicenca il JOIN instruktor i "
                 + "ON il.instruktor=i.idInstruktor JOIN licenca l ON il.licenca=l.idLicenca WHERE instruktor=? AND nazivLicence LIKE ?;";
@@ -171,15 +179,16 @@ public class DBBroker {
             rs.close();
             ps.close();
         } catch (SQLException ex) {
-           throw ex;
+           System.out.println("Greska prilikom citanja Instruktora sa licencom i uslovom.");
         }
         return list;
     }
 
-    public List<Skijas> readSkijasWithNivoSkijanja(Skijas s) throws Exception {
-        
+    @Override
+    public List<Skijas> readSkijasWithNivoSkijanja(Skijas s) {
         List<Skijas> list = new ArrayList<>();
         String query = "SELECT * FROM skijas skijas JOIN nivoskijanja nivoskijanja ON skijas.nivoSkijanja=nivoskijanja.idNivoSkijanja;";
+       try{
         Statement st = DBConnection.getInstance().getConnection().createStatement();
         ResultSet rs = st.executeQuery(query);
         while(rs.next()){
@@ -196,16 +205,19 @@ public class DBBroker {
         }
         st.close();
         rs.close();
-        
+       }catch(Exception ex){
+           System.out.println("Greska prilikom citanja skijasa sa nivoom skijanja.");
+       }
         return list;
     }
-    
-    public List<Skijas> readSkijasWithNivoSkijanjaWithCondition(Skijas s) throws Exception {
-        
+
+    @Override
+    public List<Skijas> readSkijasWithNivoSkijanjaWithCondition(Skijas s) {
         List<Skijas> list = new ArrayList<>();
         String query = "SELECT * FROM skijas skijas JOIN nivoskijanja nivoskijanja ON skijas.nivoSkijanja=nivoskijanja.idNivoSkijanja WHERE "
                 + s.vratiUslovNadjiSlogove()+";";
-        System.out.println(query);
+        //System.out.println(query);
+        try{
         Statement st = DBConnection.getInstance().getConnection().createStatement();
         ResultSet rs = st.executeQuery(query);
         while(rs.next()){
@@ -221,14 +233,18 @@ public class DBBroker {
         }
         st.close();
         rs.close();
-        
+        }catch(Exception ex){
+            System.out.println("Greska prilikom citanja skijasa sa nivoom skijanja sa uslovom.");
+        }
         return list;
     }
 
-    public List<Termin> readTerminWithInstruktorTip(Termin t) throws Exception{
+    @Override
+    public List<Termin> readTerminWithInstruktorWithTipTermina(Termin t) {
         List<Termin> list = new ArrayList<>();
         String query = "SELECT * FROM termin termin JOIN instruktor instruktor ON termin.instruktor=instruktor.idInstruktor "
                 + "JOIN tiptermina tiptermina ON termin.tip=tiptermina.idTip;";
+        try{
         Statement st =  DBConnection.getInstance().getConnection().createStatement();
                 
         ResultSet rs = st.executeQuery(query);
@@ -244,16 +260,20 @@ public class DBBroker {
         }
         rs.close();
         st.close();
-        
+        }catch(Exception ex){
+            System.out.println("Greska prilikom citanja termina sa instruktorom i tipom termina.");
+        }
         return list;
     }
 
-    public List<Termin> readTerminWithInstruktorWithCondition(Termin t) throws Exception {
+    @Override
+    public List<Termin> readTerminWithInstruktorWithCondition(Termin t) {
         List<Termin> list = new ArrayList<>();
         String query = "SELECT * FROM termin termin JOIN instruktor instruktor ON termin.instruktor=instruktor.idInstruktor "
                 + "JOIN tiptermina tiptermina ON termin.tip=tiptermina.idTip WHERE "+t.vratiUslovNadjiSlogove();
+        try{
         Statement st =  DBConnection.getInstance().getConnection().createStatement();
-        System.out.println(query);        
+        //System.out.println(query);        
         ResultSet rs = st.executeQuery(query);
         while(rs.next()){
             Termin ter = (Termin) new Termin().vratiObjekatIzRs(rs);
@@ -267,16 +287,20 @@ public class DBBroker {
         }
         rs.close();
         st.close();
-        
+        }catch(Exception ex){
+            System.out.println("Greska prilikom citanja termina sa instruktorom i tipom termina sa uslovom.");
+        }
         return list;
     }
 
-    public Object readTerminWithSkijas(Termin t) throws Exception {
+    @Override
+    public List<TerminSkijas> readTerminWithSkijas(Termin t) {
         List<TerminSkijas> list = new ArrayList<>();
         String query = "SELECT * FROM terminskijas terminskijas JOIN skijas skijas ON terminskijas.skijas=skijas.idSkijas "
                 + "JOIN nivoskijanja nivoskijanja ON skijas.nivoSkijanja=nivoskijanja.idNivoSkijanja WHERE termin="+t.getIdTermin()+";";
-                Statement st =  DBConnection.getInstance().getConnection().createStatement();
-        System.out.println(query);        
+        //System.out.println(query);        
+        try{
+            Statement st =  DBConnection.getInstance().getConnection().createStatement();
         ResultSet rs = st.executeQuery(query);
         while(rs.next()){
             Skijas s = (Skijas) new Skijas().vratiObjekatIzRs(rs);
@@ -289,10 +313,10 @@ public class DBBroker {
         }
         rs.close();
         st.close();
-        
+        }catch(Exception ex){
+            System.out.println("Greska prilikom citanja termina sa skijasem.");
+        }
         return list;
     }
     
-    
-   
 }

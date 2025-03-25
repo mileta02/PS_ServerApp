@@ -162,7 +162,8 @@ public class ObradaKlijentskihZahteva extends Thread {
                     break;
                 case Operation.OBRISI_TERMIN_SKIJAS:
                     obrisiTerminSkijas(request,response);
-                    
+                    break;
+                default:System.out.println("Operacija ne postoji.");;
                         
             }
             }catch(Exception ex){

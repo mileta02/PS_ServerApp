@@ -4,29 +4,36 @@
  */
 package logic;
 
-import database.DBBroker;
 import java.util.ArrayList;
 import java.util.List;
-import model.Instruktor;
-import model.InstruktorLicenca;
-import model.Licenca;
-import model.NivoSkijanja;
-import model.OpstiDomenskiObjekat;
-import model.Skijas;
-import model.Termin;
-import model.TerminSkijas;
-import model.TipTermina;
-
+import model.*;
+import operacija.instruktor.*;
+import operacija.instruktor_licenca.*;
+import operacija.licenca.*;
+import operacija.nivo_skijanja.*;
+import operacija.skijas.KreirajSkijas;
+import operacija.skijas.ObrisiSkijas;
+import operacija.skijas.PromeniSkijas;
+import operacija.skijas.VratiListuSkijas;
+import operacija.skijas.VratiListuSviSkijas;
+import operacija.termin.KreirajTermin;
+import operacija.termin.ObrisiTermin;
+import operacija.termin.PromeniTermin;
+import operacija.termin.VratiListuSviTermin;
+import operacija.termin.VratiListuTermin;
+import operacija.termin_skijas.KreirajTerminSkijas;
+import operacija.termin_skijas.ObrisiTerminSkijas;
+import operacija.termin_skijas.PromeniTerminSkijas;
+import operacija.termin_skijas.VratiListuTerminSkijas;
+import operacija.tip_termina.*;
 /**
  *
  * @author milan
  */
 public class Controller {
     private static Controller instance;
-    private DBBroker broker;
     
     private Controller(){
-        broker = new DBBroker();
     }
 
     public static Controller getInstance() {
@@ -36,187 +43,246 @@ public class Controller {
     }
     //INSTRUKTOR SO
     public Instruktor login(Instruktor i) throws Exception {
-        
-      List<OpstiDomenskiObjekat> odoList = broker.read(i);
-      List<Instruktor> instructorList = new ArrayList<>();
-      for(OpstiDomenskiObjekat odo: odoList){
-          instructorList.add((Instruktor) odo);
-      }
-      
-      for(Instruktor ins : instructorList){
-          if(ins.getKorisnickoIme().equals(i.getKorisnickoIme()) && ins.getSifra().equals(i.getSifra())){
-              return ins;
-          }
-      }
-      throw new Exception("Instruktor sa unetim kredencijalima ne postoji.");
-      
+        Login operacija = new Login();
+        operacija.izvrsi(i, "login");
+        return operacija.getLogged();
     }
 
-    public Instruktor kreirajInstruktor(Instruktor in) throws Exception {
-        if(broker.create(in)){
-            return in;
-        }
-        throw new Exception("Korisnik nije dobro uneo podatke.");
+    public boolean kreirajInstruktor(Instruktor i) throws Exception {
+        KreirajInstruktor operacija = new KreirajInstruktor();
+        operacija.izvrsi(i, "create");
+        return operacija.getValid();
        
     }
 
-    public boolean promeniInstruktor(Instruktor ins) throws Exception {
-        return broker.update(ins);
-        
-        
+    public boolean promeniInstruktor(Instruktor i) throws Exception {
+        PromeniInstruktor operacija = new PromeniInstruktor();
+        operacija.izvrsi(i, "update");
+        return operacija.getValid();  
     }
 
-    public boolean obrisiInstruktor(Instruktor inst) throws Exception {
-        return broker.delete(inst);
+    public boolean obrisiInstruktor(Instruktor i) throws Exception {
+        ObrisiInstruktor operacija = new ObrisiInstruktor();
+        operacija.izvrsi(i, "delete");
+        return operacija.getValid();
     }
 
-    public Object vratiListuSviInstruktor(Instruktor instr) throws Exception {
-        return broker.read(instr);
+    public List<Instruktor> vratiListuSviInstruktor(Instruktor i) throws Exception {
+        VratiListuSviInstruktor operacija = new VratiListuSviInstruktor();
+        operacija.izvrsi(new Instruktor(), "read");
+        return operacija.getLista();
     }
 
-    public Object vratiListuInstruktor(Instruktor instru) throws Exception {
-        return broker.readWithCondition(instru);
+    public List<Instruktor> vratiListuInstruktor(Instruktor i) throws Exception {
+        VratiListuInstruktor operacija = new VratiListuInstruktor();
+        operacija.izvrsi(i, "read");
+        return operacija.getList();
     }
-    //LICENCA
     
+    
+    //LICENCA
     public boolean kreirajLicenca(Licenca l) throws Exception {
-        return broker.create(l);
+        KreirajLicenca operacija = new KreirajLicenca();
+        operacija.izvrsi(l, "create");
+        return operacija.getValid();
     }
 
     public boolean promeniLicenca(Licenca l) throws Exception {
-        return  broker.update(l);
+        PromeniLicenca operacija = new PromeniLicenca();
+        operacija.izvrsi(l, "update");
+        return operacija.getValid();
     }
 
     public boolean obrisiLicenca(Licenca l) throws Exception {
-        return broker.delete(l);
+        ObrisiLicenca operacija = new ObrisiLicenca();
+        operacija.izvrsi(l, "delete");
+        return operacija.getValid();
     }
 
-    public Object vratiListuSviLicenca(Licenca l) throws Exception {
-        return broker.read(l);
+    public List<Licenca> vratiListuSviLicenca(Licenca l) throws Exception {
+        VratiListuSviLicenca operacija = new VratiListuSviLicenca();
+        operacija.izvrsi(l, "read");
+        return operacija.getList();
     }
     
-    public Object vratiListuLicenca(Licenca l) throws Exception {
-        return broker.readWithCondition(l);
+    public List<Licenca> vratiListuLicenca(Licenca l) throws Exception {
+        VratiListuLicenca operacija = new VratiListuLicenca();
+        operacija.izvrsi(l, "read");
+        return operacija.getList();
     }
     
     //INSTRUKTORLICENCA SO
     public List<InstruktorLicenca> vratiListuInstruktorLicenca(Instruktor i) throws Exception {
-        return broker.readInstruktorWithLicenca(i);
+        VratiListuInstruktorLicenca operacija = new VratiListuInstruktorLicenca();
+        operacija.izvrsi(i, "read");
+        return operacija.getList();
     }
     
-    public Object vratiListuInstruktorLicencaFilter(InstruktorLicenca il) throws Exception {
-        return broker.readInstruktorWithLicencaWithCondition(il);
+    public List<InstruktorLicenca> vratiListuInstruktorLicencaFilter(InstruktorLicenca il) throws Exception {
+        VratiListuInstruktorLicencaFilter operacija = new VratiListuInstruktorLicencaFilter();
+        operacija.izvrsi(il, "read");
+        return operacija.getList();
     }
 
     public boolean obrisiInstruktorLicenca(InstruktorLicenca il) throws Exception {
-        return broker.delete(il);
+        ObrisiInstruktorLicenca operacija = new ObrisiInstruktorLicenca();
+        operacija.izvrsi(il, "delete");
+        return operacija.getValid();
     }
 
     public boolean kreirajInstruktorLicenca(InstruktorLicenca il) throws Exception {
-        return broker.create(il);
+        KreirajInstruktorLicenca operacija = new KreirajInstruktorLicenca();
+        operacija.izvrsi(il, "create");
+        return operacija.getValid();
     }
     
     //NIVO_SKIJANJA
     public boolean kreirajNivoSkijanja(NivoSkijanja ns) throws Exception {
-        return broker.create(ns);
+        KreirajNivoSkijanja operacija = new KreirajNivoSkijanja();
+        operacija.izvrsi(ns, "create");
+        return operacija.getValid();
     }
 
-    public Object vratiListuSviNivoSkijanja(NivoSkijanja ns) throws Exception {
-        return broker.read(ns);
+    public List<NivoSkijanja> vratiListuSviNivoSkijanja(NivoSkijanja ns) throws Exception {
+        VratiListuSviNivoSkijanja operacija = new VratiListuSviNivoSkijanja();
+        operacija.izvrsi(ns, "read");
+        return operacija.getList();
     }
 
-    public Object vratiListuNivoSkijanja(NivoSkijanja ns) throws Exception {
-        return broker.readWithCondition(ns);
+    public List<NivoSkijanja> vratiListuNivoSkijanja(NivoSkijanja ns) throws Exception {
+        VratiListuNivoSkijanja operacija = new VratiListuNivoSkijanja();
+        operacija.izvrsi(ns, "read");
+        return operacija.getList();    
     }
 
     public boolean obrisiNivoSkijanja(NivoSkijanja ns) throws Exception {
-        return broker.delete(ns);
+        ObrisiNivoSkijanja operacija = new ObrisiNivoSkijanja();
+        operacija.izvrsi(ns, "delete");
+        return operacija.getValid();
     }
 
     public boolean promeniNivoSkijanja(NivoSkijanja ns) throws Exception {
-        return broker.update(ns);
+        PromeniNivoSkijanja operacija = new PromeniNivoSkijanja();
+        operacija.izvrsi(ns, "update");
+        return operacija.getValid();
     }
     
     //TIP_TERMINA
-    public Object kreirajTipTermina(TipTermina tt) throws Exception {
-        return broker.create(tt);
+    public boolean kreirajTipTermina(TipTermina tt) throws Exception {
+        KreirajTipTermina operacija = new KreirajTipTermina();
+        operacija.izvrsi(tt,"create");
+        return operacija.getValid();
     }
 
-    public Object vratiListuSviTipTermina(TipTermina tt) throws Exception {
-        return broker.read(tt);
+    public List<TipTermina> vratiListuSviTipTermina(TipTermina tt) throws Exception {
+        VratiListuSviTipTermina operacija = new VratiListuSviTipTermina();
+        operacija.izvrsi(tt, "read");
+        return operacija.getList(); 
     }
 
-    public Object vratiListuTipTermina(TipTermina tt) throws Exception {
-        return broker.readWithCondition(tt);
+    public List<TipTermina> vratiListuTipTermina(TipTermina tt) throws Exception {
+        VratiListuTipTermina operacija = new VratiListuTipTermina();
+        operacija.izvrsi(tt, "read");
+        return operacija.getList(); 
     }
-    public Object promeniTipTermina(TipTermina tt) throws Exception {
-        return broker.update(tt);
+    public boolean promeniTipTermina(TipTermina tt) throws Exception {
+        PromeniTipTermina operacija = new PromeniTipTermina();
+        operacija.izvrsi(tt, "update");
+        return operacija.getValid();    
     }
 
-    public Object obrisiTipTermina(TipTermina tt) throws Exception {
-        return broker.delete(tt);
+    public boolean obrisiTipTermina(TipTermina tt) throws Exception {
+        ObrisiTipTermina operacija = new ObrisiTipTermina();
+        operacija.izvrsi(tt, "delete");
+        return operacija.getValid();  
     }
     
     
     //SKIJAS
-    public Object vratiListuSviSkijas(Skijas s) throws Exception {
-        return broker.readSkijasWithNivoSkijanja(s);
+    public List<Skijas> vratiListuSviSkijas(Skijas s) throws Exception {
+        VratiListuSviSkijas operacija = new VratiListuSviSkijas();
+        operacija.izvrsi(s, "read");
+        return operacija.getList();
     }
 
-    public Object vratiListuSkijas(Skijas s) throws Exception {
-        return broker.readSkijasWithNivoSkijanjaWithCondition(s);
+    public List<Skijas> vratiListuSkijas(Skijas s) throws Exception {
+        VratiListuSkijas operacija = new VratiListuSkijas();
+        operacija.izvrsi(s, "read");
+        return operacija.getList();
     }
 
-    public Object kreirajSkijas(Skijas s) throws Exception {
-        return broker.create(s);
+    public boolean kreirajSkijas(Skijas s) throws Exception {
+        KreirajSkijas operacija = new KreirajSkijas();
+        operacija.izvrsi(s, "create");
+        return operacija.getValid();
     }
 
-    public Object obrisiSkijas(Skijas s) throws Exception {
-        return broker.delete(s);
-    }
+    public boolean obrisiSkijas(Skijas s) throws Exception {
+        ObrisiSkijas operacija = new ObrisiSkijas();
+        operacija.izvrsi(s, "delete");
+        return operacija.getValid();    }
 
-    public Object promeniSkijas(Skijas s) throws Exception {
-        return broker.update(s);
-    }
+    public boolean promeniSkijas(Skijas s) throws Exception {
+        PromeniSkijas operacija = new PromeniSkijas();
+        operacija.izvrsi(s, "update");
+        return operacija.getValid();    }
     
     
     //TERMIN
-    public Object vratiListuSviTermin(Termin t) throws Exception{
-        return broker.readTerminWithInstruktorTip(t);
+    public List<Termin> vratiListuSviTermin(Termin t) throws Exception{
+        VratiListuSviTermin operacija = new VratiListuSviTermin();
+        operacija.izvrsi(t, "read");
+        return operacija.getList();
     }
 
-    public Object kreirajTermin(Termin t) throws Exception{
-        return broker.create(t);
+    public boolean kreirajTermin(Termin t) throws Exception{
+       KreirajTermin operacija = new KreirajTermin();
+       operacija.izvrsi(t, "create");
+       return operacija.getValid();
     }
 
-    public Object vratiListuTermin(Termin t) throws Exception{
-        return broker.readTerminWithInstruktorWithCondition(t);
+    public List<Termin> vratiListuTermin(Termin t) throws Exception{
+        VratiListuTermin operacija = new VratiListuTermin();
+        operacija.izvrsi(t, "read");
+        return operacija.getList();
     }
 
-    public Object promeniTermin(Termin t) throws Exception{
-        return broker.update(t);
+    public boolean promeniTermin(Termin t) throws Exception{
+        PromeniTermin operacija = new PromeniTermin();
+       operacija.izvrsi(t, "update");
+       return operacija.getValid();
     }
 
-    public Object obrisiTermin(Termin t) throws Exception{
-        return broker.delete(t);
+    public boolean obrisiTermin(Termin t) throws Exception{
+       ObrisiTermin operacija = new ObrisiTermin();
+       operacija.izvrsi(t, "delete");
+       return operacija.getValid();
     }
 
     
     //TERMIN_SKIJAS
-    public Object vratiListuTerminSkijas(Termin t) throws Exception{
-        return broker.readTerminWithSkijas(t);
+    public List<TerminSkijas> vratiListuTerminSkijas(Termin t) throws Exception{
+        VratiListuTerminSkijas operacija = new VratiListuTerminSkijas();
+        operacija.izvrsi(t, "read");
+        return operacija.getList();
     }
 
-    public Object kreirajTerminSkijas(TerminSkijas t) throws Exception {
-        return broker.create(t);
+    public boolean kreirajTerminSkijas(TerminSkijas t) throws Exception {
+       KreirajTerminSkijas operacija = new KreirajTerminSkijas();
+       operacija.izvrsi(t, "create");
+       return operacija.getValid();
     }
 
-    public Object promeniTerminSkijas(TerminSkijas t) throws Exception {
-        return broker.update(t);
+    public boolean promeniTerminSkijas(TerminSkijas t) throws Exception {
+       PromeniTerminSkijas operacija = new PromeniTerminSkijas();
+       operacija.izvrsi(t, "update");
+       return operacija.getValid();
     }
 
-    public Object obrisiTerminSkijas(TerminSkijas t) throws Exception {
-        return broker.delete(t);
+    public boolean obrisiTerminSkijas(TerminSkijas t) throws Exception {
+       ObrisiTerminSkijas operacija = new ObrisiTerminSkijas();
+       operacija.izvrsi(t, "delete");
+       return operacija.getValid();
     }
 
     

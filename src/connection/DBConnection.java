@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package database;
+package connection;
 
 /**
  *
@@ -19,6 +19,7 @@ public class DBConnection {
         String url = "jdbc:mysql://localhost:3306/ps_projekat";
         try {
             connection = DriverManager.getConnection(url,"root","");
+            connection.setAutoCommit(false);
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
