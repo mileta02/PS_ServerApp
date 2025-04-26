@@ -4,6 +4,10 @@
  */
 package operacija.nivo_skijanja;
 
+import java.util.List;
+import logic.Controller;
+import model.NivoSkijanja;
+import model.Skijas;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -18,6 +22,14 @@ public class ObrisiNivoSkijanja extends ApstraktnaGenerickaOperacija {
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof NivoSkijanja))
+            throw new Exception("Sistem ne može da obriše nivo skijanja.");
+        
+        List<Skijas> list = Controller.getInstance().vratiListuSviSkijas(new Skijas());
+        for(Skijas s: list){
+            if(s.getNivoSkijanja().equals(obj))
+                throw new Exception("Sistem ne može da obriše nivo skijanja.");
+        }
     }
 
     @Override

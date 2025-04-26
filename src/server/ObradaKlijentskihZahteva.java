@@ -9,6 +9,7 @@ import communication.Receiver;
 import communication.Request;
 import communication.Response;
 import communication.Sender;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ public class ObradaKlijentskihZahteva extends Thread {
     private Socket clientSocket;
     private Sender sender;
     private Receiver receiver;
-    
+    private boolean end = false;
     public ObradaKlijentskihZahteva(Socket clientSocket) {
         this.clientSocket=clientSocket;
         sender = new Sender(clientSocket);
@@ -40,9 +41,12 @@ public class ObradaKlijentskihZahteva extends Thread {
 
     @Override
     public void run() {
-        while(true){
+        while(!end){
         try {
             Request request = (Request) receiver.receive();
+            if (request == null) {
+                break;
+            }
             Response response = new Response();
             try{
             switch(request.getOperation()){
@@ -78,9 +82,6 @@ public class ObradaKlijentskihZahteva extends Thread {
                     break;
                 case Operation.UCITAJ_LICENCA_FILTER:
                     vratiListuLicenca(request,response);
-                    break;
-                case Operation.UCITAJ_INSTRUKTOR_LICENCA_FILTER:
-                    vratiListuInstruktorLicencaFilter(request,response);
                     break;
                 case Operation.UCITAJ_INSTRUKTOR_LICENCA:
                     vratiListuInstruktorLicenca(request,response);
@@ -158,7 +159,7 @@ public class ObradaKlijentskihZahteva extends Thread {
                     kreirajTerminSkijas(request,response);
                     break;
                 case Operation.PROMENI_TERMIN_SKIJAS:
-                    promeniTerminSkijas(request,response);
+                 //   promeniTerminSkijas(request,response);
                     break;
                 case Operation.OBRISI_TERMIN_SKIJAS:
                     obrisiTerminSkijas(request,response);
@@ -170,9 +171,13 @@ public class ObradaKlijentskihZahteva extends Thread {
                 response.setException(ex);
             }
             sender.send(response);
+        } catch (IOException ex) {
+            System.out.println("Greska prilikom prijema poruke: " + ex.getMessage());
+            break;  
         } catch (Exception ex) {
-            Logger.getLogger(ObradaKlijentskihZahteva.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            System.out.println("Greska: " + ex.getMessage());
+            break;  
+            }
         }
         
     }
@@ -197,7 +202,6 @@ public class ObradaKlijentskihZahteva extends Thread {
     }
 
     private void obrisiInstruktor(Request request, Response response) throws Exception {
-
         System.out.println("Operacija obrisi instruktor");
         Instruktor i = (Instruktor) request.getArgument();
         response.setResult(Controller.getInstance().obrisiInstruktor(i));    
@@ -248,12 +252,6 @@ public class ObradaKlijentskihZahteva extends Thread {
         System.out.println("Operacija vracanje licenci instruktora");
         Instruktor i = (Instruktor) request.getArgument();
         response.setResult(Controller.getInstance().vratiListuInstruktorLicenca(i));
-    }
-    
-    private void vratiListuInstruktorLicencaFilter(Request request, Response response) throws Exception {
-        System.out.println("Operacija vracanje licenci instruktora sa filterom");
-        InstruktorLicenca il = (InstruktorLicenca) request.getArgument();
-        response.setResult(Controller.getInstance().vratiListuInstruktorLicencaFilter(il));
     }
     
     private void obrisiInstruktorLicenca(Request request, Response response) throws Exception {
@@ -406,11 +404,11 @@ public class ObradaKlijentskihZahteva extends Thread {
         response.setResult(Controller.getInstance().kreirajTerminSkijas(t));
     }
 
-    private void promeniTerminSkijas(Request request, Response response) throws Exception{
-        System.out.println("Operacija promeni termin skijas.");
-        TerminSkijas t = (TerminSkijas) request.getArgument();
-        response.setResult(Controller.getInstance().promeniTerminSkijas(t));
-    }
+   // private void promeniTerminSkijas(Request request, Response response) throws Exception{
+   //     System.out.println("Operacija promeni termin skijas.");
+   //     TerminSkijas t = (TerminSkijas) request.getArgument();
+   //     response.setResult(Controller.getInstance().promeniTerminSkijas(t));
+   // }
 
     private void obrisiTerminSkijas(Request request, Response response) throws Exception{
         System.out.println("Operacija obrisi termin skijas.");
@@ -418,5 +416,10 @@ public class ObradaKlijentskihZahteva extends Thread {
         response.setResult(Controller.getInstance().obrisiTerminSkijas(t));
     }
 
-    
+    //NIT
+    public void zaustavi() throws IOException{
+        end = true;
+        clientSocket.close();
+        interrupt();
+    }
 }

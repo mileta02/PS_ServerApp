@@ -25,6 +25,8 @@ public class VratiListuSviInstruktor extends ApstraktnaGenerickaOperacija{
     
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof Instruktor))
+            throw new Exception("Sistem ne može da nadje instruktore.");
     }
 
     @Override

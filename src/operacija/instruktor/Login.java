@@ -21,6 +21,8 @@ public class Login extends ApstraktnaGenerickaOperacija{
     
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof Instruktor))
+            throw new Exception("Ne može da se otvori glavna forma i meni");
     }
 
     @Override
@@ -33,7 +35,7 @@ public class Login extends ApstraktnaGenerickaOperacija{
               return;
           }
         }
-        throw new Exception("Instruktor sa unetim kredencijalima ne postoji.");
+            throw new Exception("Korisničko ime i šifra nisu ispravni");
     }
     
 }

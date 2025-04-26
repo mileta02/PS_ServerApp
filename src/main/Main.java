@@ -4,6 +4,7 @@
  */
 package main;
 
+import serverForm.ServerForm;
 import server.Server;
 
 /**
@@ -13,7 +14,6 @@ import server.Server;
 public class Main {
     
     public static void main(String[] args) {
-        Server server = new Server();
-        server.startServer();
+        ServerForm sf = new ServerForm();
     }
 }

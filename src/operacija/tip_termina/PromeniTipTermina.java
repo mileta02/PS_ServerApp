@@ -4,6 +4,7 @@
  */
 package operacija.tip_termina;
 
+import model.TipTermina;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -17,6 +18,15 @@ public class PromeniTipTermina extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof TipTermina))
+            throw new Exception("Sistem ne može da zapamti tip termina.");
+        if(broker.doesExistForUpdate(obj))
+            throw new Exception("Tip termina već postoji u sistemu.");
+        TipTermina tt = (TipTermina) obj;
+        if(tt.getNazivTipa().isBlank() || tt.getNazivTipa().length()>30 || !tt.getNazivTipa().matches("^[a-zA-Z ]+$"))
+            throw new Exception("Sistem ne može da zapamti tip termina.\nNaziv tipa mora sadržati do 30 slova.");
+        if(tt.getCenaSata()<0)
+            throw new Exception("Sistem ne može da zapamti tip termina.\nCena sata mora biti pozitivan broj");
         
     }
 

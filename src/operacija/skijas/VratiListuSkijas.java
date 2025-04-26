@@ -4,6 +4,7 @@
  */
 package operacija.skijas;
 
+import java.util.ArrayList;
 import java.util.List;
 import model.Skijas;
 import operacija.ApstraktnaGenerickaOperacija;
@@ -13,17 +14,19 @@ import operacija.ApstraktnaGenerickaOperacija;
  * @author milan
  */
 public class VratiListuSkijas extends ApstraktnaGenerickaOperacija{
-    private List<Skijas> list;
+    private List<Skijas> list = new ArrayList<>();
 
     public List<Skijas> getList() {
         return list;
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if (obj == null || !(obj instanceof Skijas)) 
+            throw new Exception("Sistem ne može da pronadje skijaše po zadatim kriterijumima.");
     }
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        list = broker.readSkijasWithNivoSkijanjaWithCondition((Skijas) obj);
+        list = broker.readSkijasWithNivoSkijanjaWithCondition((Skijas) obj, list);
     }
 }

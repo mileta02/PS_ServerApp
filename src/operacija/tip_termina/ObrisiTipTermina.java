@@ -4,6 +4,10 @@
  */
 package operacija.tip_termina;
 
+import java.util.List;
+import logic.Controller;
+import model.Termin;
+import model.TipTermina;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -18,6 +22,14 @@ public class ObrisiTipTermina extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof TipTermina))
+            throw new Exception("Sistem ne može da obriše tip termina.");
+        
+        List<Termin> list = Controller.getInstance().vratiListuSviTermin(new Termin());
+        for(Termin t: list){
+            if(t.getTipTermina().equals(obj))
+                throw new Exception("Sistem ne može da obriše tip termina.");
+        }
     }
 
     @Override

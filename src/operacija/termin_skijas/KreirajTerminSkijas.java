@@ -4,6 +4,7 @@
  */
 package operacija.termin_skijas;
 
+import model.TerminSkijas;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -17,8 +18,17 @@ public class KreirajTerminSkijas extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj == null || !(obj instanceof TerminSkijas))
+            throw new Exception("Sistem ne može da doda skijaša u termin.");
         if(broker.doesExist(obj))
-            throw new Exception("Termin za datog skijaša već postoji u sistemu.");
+            throw new Exception("Sistem ne može da doda skijaša u termin.\nVeć je dodat.");
+        TerminSkijas ts = (TerminSkijas) obj;
+        if(ts.getSkijas()==null)
+            throw new Exception("Sistem ne može da doda skijaša u termin.\nSkijaš nije izabran.");
+        if(ts.getTermin()==null)
+            throw new Exception("Sistem ne može da doda skijaša u termin.\nTermin nije izabran.");
+        if(ts.getDatumPrijave()==null)
+            throw new Exception("Sistem ne može da doda skijaša u termin.\nDatum nije izabran.");
     }
 
     @Override

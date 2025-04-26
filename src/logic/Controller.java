@@ -23,7 +23,7 @@ import operacija.termin.VratiListuSviTermin;
 import operacija.termin.VratiListuTermin;
 import operacija.termin_skijas.KreirajTerminSkijas;
 import operacija.termin_skijas.ObrisiTerminSkijas;
-import operacija.termin_skijas.PromeniTerminSkijas;
+import operacija.termin_skijas.VratiListuSviTerminSkijas;
 import operacija.termin_skijas.VratiListuTerminSkijas;
 import operacija.tip_termina.*;
 /**
@@ -118,8 +118,8 @@ public class Controller {
         return operacija.getList();
     }
     
-    public List<InstruktorLicenca> vratiListuInstruktorLicencaFilter(InstruktorLicenca il) throws Exception {
-        VratiListuInstruktorLicencaFilter operacija = new VratiListuInstruktorLicencaFilter();
+    public List<InstruktorLicenca> vratiListuSviInstruktorLicenca(InstruktorLicenca il) throws Exception {
+        VratiListuSviInstruktorLicenca operacija = new VratiListuSviInstruktorLicenca();
         operacija.izvrsi(il, "read");
         return operacija.getList();
     }
@@ -266,16 +266,16 @@ public class Controller {
         operacija.izvrsi(t, "read");
         return operacija.getList();
     }
+    
+    public List<TerminSkijas> vratiListuSviTerminSkijas(TerminSkijas ts) throws Exception{
+        VratiListuSviTerminSkijas operacija = new VratiListuSviTerminSkijas();
+        operacija.izvrsi(ts, "read");
+        return operacija.getList();
+    }
 
     public boolean kreirajTerminSkijas(TerminSkijas t) throws Exception {
        KreirajTerminSkijas operacija = new KreirajTerminSkijas();
        operacija.izvrsi(t, "create");
-       return operacija.getValid();
-    }
-
-    public boolean promeniTerminSkijas(TerminSkijas t) throws Exception {
-       PromeniTerminSkijas operacija = new PromeniTerminSkijas();
-       operacija.izvrsi(t, "update");
        return operacija.getValid();
     }
 

@@ -4,6 +4,10 @@
  */
 package operacija.licenca;
 
+import java.util.List;
+import logic.Controller;
+import model.InstruktorLicenca;
+import model.Licenca;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -18,6 +22,15 @@ public class ObrisiLicenca extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof Licenca))
+            throw new Exception("Sistem ne može da obriše licencu.");
+        
+        List<InstruktorLicenca> list = Controller.getInstance().vratiListuSviInstruktorLicenca(new InstruktorLicenca());
+        Licenca l = (Licenca) obj;
+        for(InstruktorLicenca il : list){
+            if(il.getLicenca().getIdLicenca() == l.getIdLicenca())
+                throw new Exception("Sistem ne može da obriše licencu.");
+        }
     }
 
     @Override

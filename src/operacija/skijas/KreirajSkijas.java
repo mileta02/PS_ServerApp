@@ -4,6 +4,7 @@
  */
 package operacija.skijas;
 
+import model.Skijas;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -17,8 +18,19 @@ public class KreirajSkijas extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if (obj == null || !(obj instanceof Skijas))
+            throw new Exception("Sistem ne može da kreira skijaša.");
         if(broker.doesExist(obj))
-            throw new Exception("Skijaš već postoji u sistemu.");
+            throw new Exception("Sistem ne može da kreira skijaša.\nSkijaš već postoji u sistemu.");
+        Skijas sk = (Skijas) obj;
+        if(sk.getIme().isBlank() || sk.getIme().length()>30 || !sk.getIme().matches("^[a-zA-Z ]+$"))
+            throw new Exception("Sistem ne može da kreira skijaša.\nIme skijaša mora sadrzati do 30 slova.");
+        if(sk.getPrezime().isBlank() || sk.getPrezime().length()>30 ||  !sk.getPrezime().matches("^[a-zA-Z ]+$"))
+            throw new Exception("Sistem ne može da kreira skijaša.\nPrezime skijaša mora sadrzati do 30 slova.");
+        if(sk.getBrojTelefona().isBlank() || !sk.getBrojTelefona().matches("\\+?[0-9]{9,15}"))
+            throw new Exception("Sistem ne može da kreira skijaša.\nBroj skijasa mora sadrzati 9-15 cifara.");
+        if(sk.getNivoSkijanja()==null)
+            throw new Exception("Sistem ne može da kreira skijaša.\nNivo skijanja mora imati dozvoljenu vrednost.");
     }
 
     @Override

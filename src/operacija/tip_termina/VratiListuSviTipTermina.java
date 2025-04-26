@@ -20,6 +20,8 @@ public class VratiListuSviTipTermina extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof TipTermina))
+            throw new Exception("Sistem ne može da pronadje tipove termina po zadatim kriterijumima.");
     }
 
     @Override

@@ -4,25 +4,31 @@
  */
 package operacija.termin_skijas;
 
+import java.util.ArrayList;
+import java.util.List;
+import model.TerminSkijas;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
  *
  * @author milan
  */
-public class PromeniTerminSkijas extends ApstraktnaGenerickaOperacija{
-    private boolean valid;
-    public boolean getValid(){
-        return valid;
-    }
+public class VratiListuSviTerminSkijas extends ApstraktnaGenerickaOperacija{
+    
+    private List<TerminSkijas> list = new ArrayList<>();
 
+    public List<TerminSkijas> getList() {
+        return list;
+    }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj == null || !(obj instanceof TerminSkijas))
+            throw new Exception("Sistem ne može da nadje Termin-Skijas.");
     }
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        valid = broker.update(obj);
+        list = broker.read(obj);
     }
-    
 }
+

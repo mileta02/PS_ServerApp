@@ -20,6 +20,8 @@ public class VratiListuSviLicenca extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof Licenca))
+            throw new Exception("Sistem ne može da nađe licence.");
     }
 
     @Override

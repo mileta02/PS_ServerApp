@@ -4,6 +4,7 @@
  */
 package operacija.instruktor;
 
+import java.util.ArrayList;
 import java.util.List;
 import model.Instruktor;
 import operacija.ApstraktnaGenerickaOperacija;
@@ -13,7 +14,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  * @author milan
  */
 public class VratiListuInstruktor extends ApstraktnaGenerickaOperacija{
-    private List<Instruktor> list;
+    private List<Instruktor> list = new ArrayList<>();
 
     public List<Instruktor> getList() {
         return list;
@@ -22,11 +23,13 @@ public class VratiListuInstruktor extends ApstraktnaGenerickaOperacija{
     
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof Instruktor))
+            throw new Exception("Sistem ne može da nadje instruktore po zadatim kriterijumima.");
     }
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        list = broker.readWithCondition(obj);
+        list = broker.readWithCondition(obj, list);
     }
     
 }

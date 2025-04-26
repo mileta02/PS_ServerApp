@@ -7,6 +7,7 @@ package repository;
 import java.util.List;
 import model.Instruktor;
 import model.InstruktorLicenca;
+import model.OpstiDomenskiObjekat;
 import model.Skijas;
 import model.Termin;
 import model.TerminSkijas;
@@ -17,16 +18,16 @@ import model.TerminSkijas;
  */
 public interface Repository<T> {
     List<T> read(T param) throws Exception;
-    List<T> readWithCondition(T param) throws Exception;
+    List<T> readWithCondition(T param, List<T> list) throws Exception;
     boolean create(T param) throws Exception;
     boolean update(T param) throws Exception;
     boolean delete(T param) throws Exception;    
-    boolean doesExist(T param);
-    List<InstruktorLicenca> readInstruktorWithLicenca(Instruktor i);
-    List<InstruktorLicenca> readInstruktorWithLicencaWithCondition(InstruktorLicenca il);
-    List<Skijas> readSkijasWithNivoSkijanja(Skijas s);
-    List<Skijas> readSkijasWithNivoSkijanjaWithCondition(Skijas s);
-    List<Termin> readTerminWithInstruktorWithTipTermina(Termin t);
-    List<Termin> readTerminWithInstruktorWithCondition(Termin t);
-    List<TerminSkijas> readTerminWithSkijas(Termin t);
+    boolean doesExist(T param) throws Exception;
+    boolean doesExistForUpdate(T param) throws Exception;
+    List<InstruktorLicenca> readInstruktorWithLicenca(Instruktor i, List<InstruktorLicenca> list) throws Exception;
+    List<Skijas> readSkijasWithNivoSkijanja(Skijas s, List<Skijas> list) throws Exception;
+    List<Skijas> readSkijasWithNivoSkijanjaWithCondition(Skijas s, List<Skijas> list) throws Exception;
+    List<Termin> readTerminWithInstruktorWithTipTermina(Termin t, List<Termin> list) throws Exception;
+    List<Termin> readTerminWithInstruktorWithTipTerminaWithCondition(Termin t, List<Termin> list) throws Exception;
+    List<TerminSkijas> readTerminWithSkijas(Termin t, List<TerminSkijas> list) throws Exception;
 }

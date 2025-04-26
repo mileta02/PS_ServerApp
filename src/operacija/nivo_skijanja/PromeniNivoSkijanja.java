@@ -4,6 +4,7 @@
  */
 package operacija.nivo_skijanja;
 
+import model.NivoSkijanja;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -17,7 +18,13 @@ public class PromeniNivoSkijanja extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        
+        if(obj==null || !(obj instanceof NivoSkijanja))
+            throw new Exception("Sistem ne može da zapamti nivo skijanja.");
+        if(broker.doesExistForUpdate(obj))
+            throw new Exception("Sistem ne može da izmeni nivo skijanja.\nNivo skijanja već postoji u sistemu.");
+        NivoSkijanja ns = (NivoSkijanja) obj;
+        if(ns.getNazivNivoa().isBlank() || ns.getNazivNivoa().length()>30 || !ns.getNazivNivoa().matches("^[a-zA-Z ]+$"))
+            throw new Exception("Sistem ne može da zapamti nivo skijanja.\nNaziv nivoa skijanja treba da sadrži do 30 slova.");
     }
 
     @Override

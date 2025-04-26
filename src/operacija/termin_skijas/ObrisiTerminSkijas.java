@@ -4,6 +4,7 @@
  */
 package operacija.termin_skijas;
 
+import model.TerminSkijas;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -18,6 +19,8 @@ public class ObrisiTerminSkijas extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj == null || !(obj instanceof TerminSkijas))
+            throw new Exception("Sistem ne moze da obriše skijaša iz termina.");
     }
 
     @Override

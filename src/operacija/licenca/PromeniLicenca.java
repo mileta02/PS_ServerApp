@@ -4,6 +4,7 @@
  */
 package operacija.licenca;
 
+import model.Licenca;
 import operacija.ApstraktnaGenerickaOperacija;
 
 /**
@@ -17,7 +18,16 @@ public class PromeniLicenca extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof Licenca))
+            throw new Exception("Sistem ne može da zapamti licencu.");
+        if(broker.doesExistForUpdate(obj))
+            throw new Exception("Sistem ne može da promeni licencu. Licenca već postoji u sistemu.");
+        Licenca l = (Licenca) obj;
+        if(l.getNazivLicence().isBlank() || l.getNazivLicence().length()>40 || !l.getNazivLicence().matches("^[a-zA-Z ]+$"))
+             throw new Exception("Sistem ne može da zapamti licencu.\nNaziv mora sadržati  do 40 slova.");
         
+        if(l.getZvanjeInstruktora().isBlank() || l.getZvanjeInstruktora().length()>40 || !l.getZvanjeInstruktora().matches("^[a-zA-Z ]+$"))
+            throw new Exception("Sistem ne može da zapamti licencu.\nZvanje mora sadržati do 40 slova.");
     }
 
     @Override

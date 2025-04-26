@@ -8,6 +8,7 @@ package connection;
  *
  * @author milan
  */
+import configuration.Configuration;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,9 +17,11 @@ public class DBConnection {
     private static DBConnection instance;
     private Connection connection;
     private DBConnection(){
-        String url = "jdbc:mysql://localhost:3306/ps_projekat";
         try {
-            connection = DriverManager.getConnection(url,"root","");
+            String url = Configuration.getInstance().getProperty("db_url");
+            String password = Configuration.getInstance().getProperty("db_password");
+            String username = Configuration.getInstance().getProperty("db_user");
+            connection = DriverManager.getConnection(url,username,password);
             connection.setAutoCommit(false);
         } catch (SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);

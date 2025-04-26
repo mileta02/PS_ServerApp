@@ -20,6 +20,8 @@ public class VratiListuSviNivoSkijanja extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if(obj==null || !(obj instanceof NivoSkijanja))
+            throw new Exception("Sistem ne može da nadje nivoe skijanja.");
     }
 
     @Override
