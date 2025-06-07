@@ -32,7 +32,7 @@ public class ObrisiTermin extends ApstraktnaGenerickaOperacija{
         List<TerminSkijas> list = Controller.getInstance().vratiListuSviTerminSkijas(new TerminSkijas());
         for(TerminSkijas ts : list){
             if(ts.getTermin().equals(t))
-                throw new Exception("Sistem ne može da obriše termin.");
+                throw new Exception("Sistem ne može da obriše termin. Postoje skijaši za izabrani termin.");
         }
     }
 

@@ -272,8 +272,12 @@ public class Controller {
         operacija.izvrsi(ts, "read");
         return operacija.getList();
     }
-
-    public boolean kreirajTerminSkijas(TerminSkijas t) throws Exception {
+//    public boolean kreirajTerminSkijas(TerminSkijas t) throws Exception {
+//       KreirajTerminSkijas operacija = new KreirajTerminSkijas();
+//       operacija.izvrsi(t, "create");
+//       return operacija.getValid();
+//    }
+    public boolean kreirajTerminSkijas(List<TerminSkijas> t) throws Exception {
        KreirajTerminSkijas operacija = new KreirajTerminSkijas();
        operacija.izvrsi(t, "create");
        return operacija.getValid();

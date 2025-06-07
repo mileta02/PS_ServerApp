@@ -9,6 +9,8 @@ import java.util.List;
 import model.Termin;
 import model.TerminSkijas;
 import operacija.ApstraktnaGenerickaOperacija;
+import repository.RepositoryCustom;
+import repository.db.imp.DbRepositoryCustom;
 
 /**
  *
@@ -16,6 +18,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  */
 public class VratiListuTerminSkijas extends ApstraktnaGenerickaOperacija{
     private List<TerminSkijas> list = new ArrayList<>();
+    protected final RepositoryCustom brokerCustom = new DbRepositoryCustom();
 
     public List<TerminSkijas> getList() {
         return list;
@@ -28,6 +31,6 @@ public class VratiListuTerminSkijas extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        list = broker.readTerminWithSkijas((Termin) obj, list);
+        list = brokerCustom.readTerminWithSkijas((Termin) obj, list);
     }
 }

@@ -9,6 +9,8 @@ import java.util.List;
 import model.Instruktor;
 import model.InstruktorLicenca;
 import operacija.ApstraktnaGenerickaOperacija;
+import repository.RepositoryCustom;
+import repository.db.imp.DbRepositoryCustom;
 
 /**
  *
@@ -16,6 +18,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  */
 public class VratiListuInstruktorLicenca extends ApstraktnaGenerickaOperacija{
     private List<InstruktorLicenca> list= new ArrayList<>();
+    protected final RepositoryCustom brokerCustom = new DbRepositoryCustom();
 
     public List<InstruktorLicenca> getList() {
         return list;
@@ -29,7 +32,7 @@ public class VratiListuInstruktorLicenca extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        list = broker.readInstruktorWithLicenca((Instruktor) obj, list);
+        list = brokerCustom.readInstruktorWithLicenca((Instruktor) obj, list);
     }
     
 }

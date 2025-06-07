@@ -400,8 +400,8 @@ public class ObradaKlijentskihZahteva extends Thread {
 
     private void kreirajTerminSkijas(Request request, Response response) throws Exception{
         System.out.println("Operacija kreiraj termin skijas.");
-        TerminSkijas t = (TerminSkijas) request.getArgument();
-        response.setResult(Controller.getInstance().kreirajTerminSkijas(t));
+        List<TerminSkijas> ts = (List<TerminSkijas>) request.getArgument();
+        response.setResult(Controller.getInstance().kreirajTerminSkijas(ts));
     }
 
    // private void promeniTerminSkijas(Request request, Response response) throws Exception{

@@ -20,7 +20,7 @@ public class KreirajInstruktor extends ApstraktnaGenerickaOperacija{
     protected void preduslovi(Object obj) throws Exception {
         if(obj==null || !(obj instanceof Instruktor))
             throw new Exception("Sistem ne može da kreira instruktora.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da kreira instruktora.\nInstruktor sa unetim korisničkim imenom već postoji u sistemu.");
         Instruktor i = (Instruktor) obj;
         if (i.getIme().isBlank() || i.getIme().length()>30) {

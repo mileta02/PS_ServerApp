@@ -20,7 +20,7 @@ public class KreirajSkijas extends ApstraktnaGenerickaOperacija{
     protected void preduslovi(Object obj) throws Exception {
         if (obj == null || !(obj instanceof Skijas))
             throw new Exception("Sistem ne može da kreira skijaša.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da kreira skijaša.\nSkijaš već postoji u sistemu.");
         Skijas sk = (Skijas) obj;
         if(sk.getIme().isBlank() || sk.getIme().length()>30 || !sk.getIme().matches("^[a-zA-Z ]+$"))

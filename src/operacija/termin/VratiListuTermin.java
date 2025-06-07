@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Termin;
 import operacija.ApstraktnaGenerickaOperacija;
+import repository.RepositoryCustom;
+import repository.db.imp.DbRepositoryCustom;
 
 /**
  *
@@ -15,6 +17,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  */
 public class VratiListuTermin extends ApstraktnaGenerickaOperacija{
     private List<Termin> list = new ArrayList<>();
+    protected final RepositoryCustom brokerCustom = new DbRepositoryCustom();
 
     public List<Termin> getList() {
         return list;
@@ -27,7 +30,7 @@ public class VratiListuTermin extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        list = broker.readTerminWithInstruktorWithTipTerminaWithCondition((Termin) obj, list);
+        list = brokerCustom.readTerminWithInstruktorWithTipTerminaWithCondition((Termin) obj, list);
     }
     
 }

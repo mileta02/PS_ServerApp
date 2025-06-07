@@ -20,7 +20,7 @@ public class KreirajNivoSkijanja extends ApstraktnaGenerickaOperacija{
     protected void preduslovi(Object obj) throws Exception {
         if(obj==null || !(obj instanceof NivoSkijanja))
             throw new Exception("Sistem ne može da kreira nivo skijanja.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da kreira nivo skijanja.\nNivo skijanja već postoji u sistemu.");
         NivoSkijanja ns = (NivoSkijanja) obj;
         if(ns.getNazivNivoa().isBlank() || ns.getNazivNivoa().length()>30 || !ns.getNazivNivoa().matches("^[a-zA-Z ]+$"))

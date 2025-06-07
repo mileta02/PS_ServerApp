@@ -35,7 +35,7 @@ public class Login extends ApstraktnaGenerickaOperacija{
               return;
           }
         }
-            throw new Exception("Korisničko ime i šifra nisu ispravni");
+            logged = null;
     }
     
 }

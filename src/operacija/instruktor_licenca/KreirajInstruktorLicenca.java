@@ -25,7 +25,7 @@ private boolean valid;
     protected void preduslovi(Object obj) throws Exception {
         if(obj == null || !(obj instanceof InstruktorLicenca))
             throw new Exception("Sistem ne može da zapamti licencu.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da zapamti licencu.\nInstruktor je već licenciram za datu godinu.");
         InstruktorLicenca novaLicenca = (InstruktorLicenca) obj;
         if(novaLicenca.getGodinaSticanja() > LocalDate.now().getYear())

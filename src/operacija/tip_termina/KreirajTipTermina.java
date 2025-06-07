@@ -20,7 +20,7 @@ public class KreirajTipTermina extends ApstraktnaGenerickaOperacija{
     protected void preduslovi(Object obj) throws Exception {
         if(obj==null || !(obj instanceof TipTermina))
             throw new Exception("Sistem ne može da kreira tip termina.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da kreira tip termina.\nTip termina već postoji u sistemu.");
         TipTermina tt = (TipTermina) obj;
         if(tt.getNazivTipa().isBlank() || tt.getNazivTipa().length()>30 || !tt.getNazivTipa().matches("^[a-zA-Z ]+$"))

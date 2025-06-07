@@ -21,7 +21,7 @@ public class KreirajTermin extends ApstraktnaGenerickaOperacija{
     protected void preduslovi(Object obj) throws Exception {
         if(obj==null || !(obj instanceof Termin))
             throw new Exception("Sistem ne može da kreira Termin.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da kreira Termin.\n Vec postoji.");
         Termin t = (Termin) obj;
         if(t.getVremeOd()==null || t.getVremeDo()==null ||  t.getVremeDo().isBefore(t.getVremeOd()))

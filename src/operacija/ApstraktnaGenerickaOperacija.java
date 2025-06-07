@@ -5,9 +5,11 @@
 package operacija;
 
 import java.sql.SQLException;
-import repository.Repository;
+import repository.RepositoryCustom;
 import repository.db.DbRepository;
 import repository.db.imp.DbRepositoryGeneric;
+import repository.RepositoryGeneric;
+import repository.db.imp.DbRepositoryCustom;
 
 /**
  *
@@ -15,8 +17,7 @@ import repository.db.imp.DbRepositoryGeneric;
  */
 public abstract class ApstraktnaGenerickaOperacija {
     
-    protected final Repository broker;
-
+    protected final RepositoryGeneric broker;
     public ApstraktnaGenerickaOperacija() {
         this.broker = new DbRepositoryGeneric();
     }

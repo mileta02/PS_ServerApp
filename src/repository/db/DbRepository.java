@@ -6,13 +6,13 @@ package repository.db;
 
 import connection.DBConnection;
 import java.sql.SQLException;
-import repository.Repository;
+import repository.RepositoryGeneric;
 
 /**
  *
  * @author milan
  */
-public interface DbRepository<T> extends Repository<T>{
+public interface DbRepository<T> extends RepositoryGeneric<T>{
     
     default public void connect(){
         DBConnection.getInstance().getConnection();

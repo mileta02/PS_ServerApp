@@ -20,7 +20,7 @@ public class KreirajLicenca extends ApstraktnaGenerickaOperacija {
     protected void preduslovi(Object obj) throws Exception {
         if(obj==null || !(obj instanceof Licenca))
             throw new Exception("Sistem ne može da kreira licencu.");
-        if(broker.doesExist(obj))
+        if(broker.doesExistForCreate(obj))
             throw new Exception("Sistem ne može da kreira licencu.\nLicenca već postoji u sistemu.");
         Licenca l = (Licenca) obj;
         if(l.getNazivLicence().isBlank() || l.getNazivLicence().length()>40 || !l.getNazivLicence().matches("^[a-zA-Z ]+$"))

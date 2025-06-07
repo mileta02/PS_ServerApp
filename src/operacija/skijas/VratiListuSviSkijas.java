@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Skijas;
 import operacija.ApstraktnaGenerickaOperacija;
+import repository.RepositoryCustom;
+import repository.db.imp.DbRepositoryCustom;
 
 /**
  *
@@ -15,6 +17,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  */
 public class VratiListuSviSkijas extends ApstraktnaGenerickaOperacija{
     private List<Skijas> list= new ArrayList<>();
+    protected final RepositoryCustom brokerCustom = new DbRepositoryCustom();
 
     public List<Skijas> getList() {
         return list;
@@ -27,6 +30,6 @@ public class VratiListuSviSkijas extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        list = broker.readSkijasWithNivoSkijanja((Skijas) obj, list);
+        list = brokerCustom.readSkijasWithNivoSkijanja((Skijas) obj, list);
     }
 }
