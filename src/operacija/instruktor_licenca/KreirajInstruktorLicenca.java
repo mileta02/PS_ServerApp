@@ -4,6 +4,7 @@
  */
 package operacija.instruktor_licenca;
 
+import exception.CustomException;
 import java.time.LocalDate;
 import java.util.List;
 import logic.Controller;
@@ -24,12 +25,12 @@ private boolean valid;
     @Override
     protected void preduslovi(Object obj) throws Exception {
         if(obj == null || !(obj instanceof InstruktorLicenca))
-            throw new Exception("Sistem ne može da zapamti licencu.");
+            throw new CustomException("error.license_save_fail");
         if(broker.doesExistForCreate(obj))
-            throw new Exception("Sistem ne može da zapamti licencu.\nInstruktor je već licenciram za datu godinu.");
+            throw new CustomException("error.license_already_exists");
         InstruktorLicenca novaLicenca = (InstruktorLicenca) obj;
         if(novaLicenca.getGodinaSticanja() > LocalDate.now().getYear())
-            throw new Exception("Sistem ne može da zapamti licencu.\nLicenca se mora odnositi na prošlost.");
+            throw new CustomException("error.license_must_be_past");
         
         Licenca l = novaLicenca.getLicenca();
         Instruktor i = novaLicenca.getInstruktor();
@@ -43,16 +44,16 @@ private boolean valid;
                     prethodniStepen = true;
                     int godina = godinaPrethodnogStepena(list, stepenLicence-1); 
                     if((novaLicenca.getGodinaSticanja() - godina) <2)
-                       throw new Exception("Sistem ne može da zapamti licencu.\nMora proći minimum 2 godine izmedju sticanja "+(stepenLicence-1)+". i "+stepenLicence+". nivoa znanja.");
+                       throw new CustomException("error.license_min_2_years_between_levels");
                 }
             }
             if (!prethodniStepen) {
-                throw new Exception("Sistem ne može da zapamti licencu.\nInstruktor mora imati prethodni nivo zvanja položen.");
+                throw new CustomException("error.license_previous_level_required");
             }
         }
         
         if(stepenLicence < maksimalanStepen(list, novaLicenca.getGodinaSticanja()))
-            throw new Exception("Sistem ne može da zapamti licencu.\nInstruktor može obnoviti najviši stečeni nivo zvanja ili polagati za sledeći nivo.");
+            throw new CustomException("error.license_only_highest_or_next_level_allowed");
 
     }
 

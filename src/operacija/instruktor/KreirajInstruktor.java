@@ -4,6 +4,7 @@
  */
 package operacija.instruktor;
 
+import exception.CustomException;
 import model.Instruktor;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -16,34 +17,32 @@ public class KreirajInstruktor extends ApstraktnaGenerickaOperacija{
     public boolean getValid(){
         return valid;
     }
-    @Override
-    protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof Instruktor))
-            throw new Exception("Sistem ne može da kreira instruktora.");
-        if(broker.doesExistForCreate(obj))
-            throw new Exception("Sistem ne može da kreira instruktora.\nInstruktor sa unetim korisničkim imenom već postoji u sistemu.");
+        @Override
+        protected void preduslovi(Object obj) throws Exception {
+        if (obj == null || !(obj instanceof Instruktor))
+            throw new CustomException("error.instruktor.create.invalid");
+        if (broker.doesExistForCreate(obj))
+            throw new CustomException("error.instruktor.create.username.exists");
         Instruktor i = (Instruktor) obj;
-        if (i.getIme().isBlank() || i.getIme().length()>30) {
-            throw new Exception("Sistem ne može da kreira instruktora.\nIme mora sadržati do 30 slova.");
-        }   
-        if (i.getPrezime().isBlank() || i.getPrezime().length()>30) {
-            throw new Exception("Sistem ne može da kreira instruktora.\nPrezime mora sadržati do 30 slova.");
-        }
-        if (i.getKontakt().isBlank() || !i.getKontakt().matches("\\+?[0-9]{9,15}")) {
-            throw new Exception("Sistem ne može da kreira instruktora.\nKontakt mora imati 9-15 cifara!");
-        }
-        if (i.getKorisnickoIme().isBlank() || i.getKorisnickoIme().length() < 5 || i.getKorisnickoIme().length() > 30) {
-            throw new Exception("Sistem ne može da kreira instruktora.\nKorisničko ime mora sadržati od 5 do 30 karaktera!");
-        }
-        if (i.getSifra().isBlank() || i.getSifra().length() < 8 || i.getSifra().length() > 30 || !i.getSifra().matches(".*\\d.*")) {
-            throw new Exception("Sistem ne može da kreira instruktora.\nŠifra mora sadržati od 8 do 30 karaktera uključujući i broj!");
-        }
+        if (i.getIme().isBlank() || i.getIme().length() > 30)
+            throw new CustomException("error.instruktor.create.name.invalid");
+        if (i.getPrezime().isBlank() || i.getPrezime().length() > 30)
+            throw new CustomException("error.instruktor.create.surname.invalid");
+        if (i.getKontakt().isBlank() || !i.getKontakt().matches("\\+?[0-9]{9,15}"))
+            throw new CustomException("error.instruktor.create.contact.invalid");
+        if (i.getKorisnickoIme().isBlank() || i.getKorisnickoIme().length() < 5 || i.getKorisnickoIme().length() > 30)
+            throw new CustomException("error.instruktor.create.username.length");
+        if (i.getSifra().isBlank() || i.getSifra().length() < 8 || i.getSifra().length() > 30 || !i.getSifra().matches(".*\\d.*"))
+            throw new CustomException("error.instruktor.create.password.invalid");
     }
+        
+        @Override
+        protected void izvrsiOperaciju(Object obj) throws Exception {
+            valid = broker.create(obj);
+        }
+}
     
 
-    @Override
-    protected void izvrsiOperaciju(Object obj) throws Exception {
-        valid = broker.create(obj);
-    }
     
-}
+    
+

@@ -4,6 +4,7 @@
  */
 package operacija.instruktor_licenca;
 
+import exception.CustomException;
 import model.InstruktorLicenca;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -19,7 +20,7 @@ public class ObrisiInstruktorLicenca extends ApstraktnaGenerickaOperacija {
     @Override
     protected void preduslovi(Object obj) throws Exception {
         if(obj == null || !(obj instanceof InstruktorLicenca))
-            throw new Exception("Sistem ne može da obrise licencu.");
+            throw new CustomException("error.licenca.delete");
     }
 
     @Override

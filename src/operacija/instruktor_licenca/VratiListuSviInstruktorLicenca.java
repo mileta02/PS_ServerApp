@@ -4,6 +4,7 @@
  */
 package operacija.instruktor_licenca;
 
+import exception.CustomException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Instruktor;
@@ -24,7 +25,7 @@ public class VratiListuSviInstruktorLicenca extends ApstraktnaGenerickaOperacija
     @Override
     protected void preduslovi(Object obj) throws Exception {
         if(obj == null || !(obj instanceof InstruktorLicenca))
-            throw new Exception("Sistem ne može da pronadje licece za zadatog instruktora.");
+            throw new CustomException("error.licenca.notfound.for.instruktor");
     }
 
     @Override

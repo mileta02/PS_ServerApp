@@ -4,6 +4,7 @@
  */
 package operacija.termin;
 
+import exception.CustomException;
 import java.time.LocalDate;
 import model.Termin;
 import operacija.ApstraktnaGenerickaOperacija;
@@ -19,25 +20,25 @@ public class KreirajTermin extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof Termin))
-            throw new Exception("Sistem ne može da kreira Termin.");
-        if(broker.doesExistForCreate(obj))
-            throw new Exception("Sistem ne može da kreira Termin.\n Vec postoji.");
+        if (obj == null || !(obj instanceof Termin))
+            throw new CustomException("error.termin.create.invalid");
+        if (broker.doesExistForCreate(obj))
+            throw new CustomException("error.termin.create.exists");
         Termin t = (Termin) obj;
-        if(t.getVremeOd()==null || t.getVremeDo()==null ||  t.getVremeDo().isBefore(t.getVremeOd()))
-            throw new Exception("Sistem ne može da kreira Termin.\n Vreme kraja mora biti nakon vremena početka.");
-        if(t.getMaxBrojSkijasa()<=0)
-            throw new Exception("Sistem ne može da kreira Termin.\n Broj skijaša mora biti veći od 0.");
-        if(t.getUkupanIznos()<0)
-            throw new Exception("Sistem ne može da kreira Termin.\n Ukupan iznos mora biti veći od 0.");
-        if(t.getDatum()==null || t.getDatum().isBefore(LocalDate.now()))
-            throw new Exception("Sistem ne može da kreira Termin.\n Datum se mora odnositi na budućnost.");
-        if(t.getTipTermina()==null)
-            throw new Exception("Sistem ne može da kreira Termin.\n Tip termina nije odabran.");
-        if(t.getInstruktor()==null)
-            throw new Exception("Sistem ne može da kreira Termin.\n Instruktor nije odabran.");
-
+        if (t.getVremeOd() == null || t.getVremeDo() == null || t.getVremeDo().isBefore(t.getVremeOd()))
+            throw new CustomException("error.termin.create.time.invalid");
+        if (t.getMaxBrojSkijasa() <= 0)
+            throw new CustomException("error.termin.create.maxskijasi.invalid");
+        if (t.getUkupanIznos() < 0)
+            throw new CustomException("error.termin.create.ukupaniznos.invalid");
+        if (t.getDatum() == null || t.getDatum().isBefore(LocalDate.now()))
+            throw new CustomException("error.termin.create.datum.invalid");
+        if (t.getTipTermina() == null)
+            throw new CustomException("error.termin.create.tiptermina.null");
+        if (t.getInstruktor() == null)
+            throw new CustomException("error.termin.create.instruktor.null");
     }
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {

@@ -4,6 +4,7 @@
  */
 package operacija.termin_skijas;
 
+import exception.CustomException;
 import java.util.List;
 import model.TerminSkijas;
 import operacija.ApstraktnaGenerickaOperacija;
@@ -23,21 +24,21 @@ public class KreirajTerminSkijas extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
+        if (obj == null)
+            throw new CustomException("error.terminski.addskier.null"); 
+
         List<TerminSkijas> list = (List<TerminSkijas>) obj;
-        if(obj == null)
-            throw new Exception("Sistem ne može da doda skijaša u termin.");
-        for(TerminSkijas ts : list){
-//            if(broker.doesExistForCreate(ts))
-//                throw new Exception("Sistem ne može da doda skijaša u termin.\nVeć je dodat.");
-            if(ts.getSkijas()==null)
-                throw new Exception("Sistem ne može da doda skijaša u termin.\nSkijaš nije izabran.");
-            if(ts.getTermin()==null)
-                throw new Exception("Sistem ne može da doda skijaša u termin.\nTermin nije izabran.");
-            if(ts.getDatumPrijave()==null)
-                throw new Exception("Sistem ne može da doda skijaša u termin.\nDatum nije izabran.");
+
+        for (TerminSkijas ts : list) {
+            if (ts.getSkijas() == null)
+                throw new CustomException("error.terminski.addskier.noskier"); 
+            if (ts.getTermin() == null)
+                throw new CustomException("error.terminski.addskier.notermin"); 
+            if (ts.getDatumPrijave() == null)
+                throw new CustomException("error.terminski.addskier.nodate"); 
         }
-        
     }
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {

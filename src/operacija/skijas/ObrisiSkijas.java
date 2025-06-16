@@ -4,6 +4,7 @@
  */
 package operacija.skijas;
 
+import exception.CustomException;
 import java.util.List;
 import logic.Controller;
 import model.Skijas;
@@ -22,13 +23,13 @@ public class ObrisiSkijas extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if (obj == null || !(obj instanceof Skijas)) 
-            throw new Exception("Sistem ne može da obriše skijaša.");
-        
+        if (obj == null || !(obj instanceof Skijas))
+            throw new CustomException("error.skijas.delete.invalid");
+
         List<TerminSkijas> list = Controller.getInstance().vratiListuSviTerminSkijas(new TerminSkijas());
-        for(TerminSkijas ts : list){
-            if(ts.getSkijas().equals(obj))
-                throw new Exception("Sistem ne može da obriše skijaša.");
+        for (TerminSkijas ts : list) {
+            if (ts.getSkijas().equals(obj))
+                throw new CustomException("error.skijas.delete.inUse");
         }
     }
 

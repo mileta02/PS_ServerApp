@@ -4,6 +4,7 @@
  */
 package operacija.nivo_skijanja;
 
+import exception.CustomException;
 import model.NivoSkijanja;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -18,14 +19,16 @@ public class PromeniNivoSkijanja extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof NivoSkijanja))
-            throw new Exception("Sistem ne može da zapamti nivo skijanja.");
-        if(broker.doesExistForUpdate(obj))
-            throw new Exception("Sistem ne može da izmeni nivo skijanja.\nNivo skijanja već postoji u sistemu.");
+        if (obj == null || !(obj instanceof NivoSkijanja))
+            throw new CustomException("error.nivoSkijanja.update.invalid");
+        if (broker.doesExistForUpdate(obj))
+            throw new CustomException("error.nivoSkijanja.update.exists");
+
         NivoSkijanja ns = (NivoSkijanja) obj;
-        if(ns.getNazivNivoa().isBlank() || ns.getNazivNivoa().length()>30 || !ns.getNazivNivoa().matches("^[a-zA-Z ]+$"))
-            throw new Exception("Sistem ne može da zapamti nivo skijanja.\nNaziv nivoa skijanja treba da sadrži do 30 slova.");
+        if (ns.getNazivNivoa().isBlank() || ns.getNazivNivoa().length() > 30 || !ns.getNazivNivoa().matches("^[a-zA-Z ]+$"))
+            throw new CustomException("error.nivoSkijanja.update.naziv.invalid");
     }
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {

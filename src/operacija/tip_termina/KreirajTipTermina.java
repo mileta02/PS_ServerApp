@@ -4,6 +4,7 @@
  */
 package operacija.tip_termina;
 
+import exception.CustomException;
 import model.TipTermina;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -18,16 +19,17 @@ public class KreirajTipTermina extends ApstraktnaGenerickaOperacija{
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof TipTermina))
-            throw new Exception("Sistem ne može da kreira tip termina.");
-        if(broker.doesExistForCreate(obj))
-            throw new Exception("Sistem ne može da kreira tip termina.\nTip termina već postoji u sistemu.");
+        if (obj == null || !(obj instanceof TipTermina))
+            throw new CustomException("error.tiptermina.create.invalid");
+        if (broker.doesExistForCreate(obj))
+            throw new CustomException("error.tiptermina.create.exists");
         TipTermina tt = (TipTermina) obj;
-        if(tt.getNazivTipa().isBlank() || tt.getNazivTipa().length()>30 || !tt.getNazivTipa().matches("^[a-zA-Z ]+$"))
-            throw new Exception("Sistem ne može da kreira tip termina.\nNaziv tipa mora sadržati do 30 slova.");
-        if(tt.getCenaSata()<0)
-            throw new Exception("Sistem ne može da kreira tip termina.\nCena sata mora biti pozitivan broj.");
+        if (tt.getNazivTipa().isBlank() || tt.getNazivTipa().length() > 30 || !tt.getNazivTipa().matches("^[a-zA-Z ]+$"))
+            throw new CustomException("error.tiptermina.create.naziv.invalid");
+        if (tt.getCenaSata() < 0)
+            throw new CustomException("error.tiptermina.create.cena.invalid");
     }
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {

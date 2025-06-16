@@ -4,6 +4,7 @@
  */
 package operacija.termin;
 
+import exception.CustomException;
 import java.time.LocalDate;
 import java.util.List;
 import logic.Controller;
@@ -23,18 +24,18 @@ public class ObrisiTermin extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof Termin))
-            throw new Exception("Sistem ne može da obriše termin.");
+        if (obj == null || !(obj instanceof Termin))
+            throw new CustomException("error.termin.delete.invalid");
         Termin t = (Termin) obj;
-        if(t.getDatum().isBefore(LocalDate.now()))
-                throw new Exception("Sistem ne može da obriše termin.");
-        
+        if (t.getDatum().isBefore(LocalDate.now()))
+            throw new CustomException("error.termin.delete.pastdate");
         List<TerminSkijas> list = Controller.getInstance().vratiListuSviTerminSkijas(new TerminSkijas());
-        for(TerminSkijas ts : list){
-            if(ts.getTermin().equals(t))
-                throw new Exception("Sistem ne može da obriše termin. Postoje skijaši za izabrani termin.");
+        for (TerminSkijas ts : list) {
+            if (ts.getTermin().equals(t))
+                throw new CustomException("error.termin.delete.hasskiers");
         }
     }
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {

@@ -4,6 +4,7 @@
  */
 package operacija.instruktor;
 
+import exception.CustomException;
 import java.util.ArrayList;
 import java.util.List;
 import logic.Controller;
@@ -25,18 +26,17 @@ public class ObrisiInstruktor extends ApstraktnaGenerickaOperacija {
     @Override
     protected void preduslovi(Object obj) throws Exception {
         if(obj==null || !(obj instanceof Instruktor))
-            throw new Exception("Sistem ne može da obriše instruktora.");
-        //Strukturno ogranicenje za termin
+            throw new CustomException("error.instruktor.delete.invalid");
+
         List<Termin> listT = Controller.getInstance().vratiListuSviTermin(new Termin());
         for(Termin t : listT){
             if(t.getInstruktor().equals(obj))
-                throw new Exception("Sistem ne može da obriše instruktora.");
+                throw new CustomException("error.instruktor.delete.has.termins");
         }
         
-        //Strukturno ogranicenje za licencu
         List<InstruktorLicenca> listIL = Controller.getInstance().vratiListuInstruktorLicenca((Instruktor) obj);
         if(!listIL.isEmpty())
-            throw new Exception("Sistem ne može da obriše instruktora.");
+            throw new CustomException("error.instruktor.delete.has.licences");
     }
 
     @Override

@@ -4,6 +4,7 @@
  */
 package operacija.licenca;
 
+import exception.CustomException;
 import model.Licenca;
 import operacija.ApstraktnaGenerickaOperacija;
 
@@ -18,17 +19,17 @@ public class KreirajLicenca extends ApstraktnaGenerickaOperacija {
     }
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof Licenca))
-            throw new Exception("Sistem ne može da kreira licencu.");
-        if(broker.doesExistForCreate(obj))
-            throw new Exception("Sistem ne može da kreira licencu.\nLicenca već postoji u sistemu.");
+        if (obj == null || !(obj instanceof Licenca))
+            throw new CustomException("error.licenca.create.invalid");
+        if (broker.doesExistForCreate(obj))
+            throw new CustomException("error.licenca.create.exists");
         Licenca l = (Licenca) obj;
-        if(l.getNazivLicence().isBlank() || l.getNazivLicence().length()>40 || !l.getNazivLicence().matches("^[a-zA-Z ]+$"))
-             throw new Exception("Sistem ne može da kreira licencu.\nNaziv mora sadržati  do 40 slova.");
-        
-        if(l.getZvanjeInstruktora().isBlank() || l.getZvanjeInstruktora().length()>40 || !l.getZvanjeInstruktora().matches("^[a-zA-Z ]+$"))
-            throw new Exception("Sistem ne može da kreira licencu.\nZvanje mora sadržati do 40 slova.");
-    }
+        if (l.getNazivLicence().isBlank() || l.getNazivLicence().length() > 40 || !l.getNazivLicence().matches("^[a-zA-Z ]+$"))
+            throw new CustomException("error.licenca.create.naziv.invalid");
+        if (l.getZvanjeInstruktora().isBlank() || l.getZvanjeInstruktora().length() > 40 || !l.getZvanjeInstruktora().matches("^[a-zA-Z ]+$"))
+            throw new CustomException("error.licenca.create.zvanje.invalid");
+}
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {

@@ -4,6 +4,7 @@
  */
 package operacija.licenca;
 
+import exception.CustomException;
 import java.util.List;
 import logic.Controller;
 import model.InstruktorLicenca;
@@ -22,16 +23,17 @@ public class ObrisiLicenca extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void preduslovi(Object obj) throws Exception {
-        if(obj==null || !(obj instanceof Licenca))
-            throw new Exception("Sistem ne može da obriše licencu.");
-        
+        if (obj == null || !(obj instanceof Licenca))
+            throw new CustomException("error.licenca.delete.invalid");
+
         List<InstruktorLicenca> list = Controller.getInstance().vratiListuSviInstruktorLicenca(new InstruktorLicenca());
         Licenca l = (Licenca) obj;
-        for(InstruktorLicenca il : list){
-            if(il.getLicenca().getIdLicenca() == l.getIdLicenca())
-                throw new Exception("Sistem ne može da obriše licencu.");
+        for (InstruktorLicenca il : list) {
+            if (il.getLicenca().getIdLicenca() == l.getIdLicenca())
+                throw new CustomException("error.licenca.delete.inuse");
         }
     }
+
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
