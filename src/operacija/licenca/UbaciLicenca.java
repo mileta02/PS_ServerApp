@@ -12,7 +12,7 @@ import operacija.ApstraktnaGenerickaOperacija;
  *
  * @author milan
  */
-public class KreirajLicenca extends ApstraktnaGenerickaOperacija {
+public class UbaciLicenca extends ApstraktnaGenerickaOperacija {
     private boolean valid;
     public boolean getValid(){
         return valid;

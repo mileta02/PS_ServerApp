@@ -23,4 +23,5 @@ public interface RepositoryCustom {
     List<Termin> readTerminWithInstruktorWithTipTerminaWithCondition(Termin t, List<Termin> list) throws Exception;
     List<TerminSkijas> readTerminWithSkijas(Termin t, List<TerminSkijas> list) throws Exception;
     boolean saveTerminWithSkijasi(List<TerminSkijas> list) throws Exception;
+    Instruktor login(Instruktor instruktor) throws Exception;
 }

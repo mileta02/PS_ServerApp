@@ -7,14 +7,17 @@ package operacija.instruktor;
 import java.util.List;
 import model.Instruktor;
 import operacija.ApstraktnaGenerickaOperacija;
+import repository.RepositoryCustom;
+import repository.db.imp.DbRepositoryCustom;
 
 /**
  *
  * @author milan
  */
-public class Login extends ApstraktnaGenerickaOperacija{
+public class PrijaviInstruktor extends ApstraktnaGenerickaOperacija{
     private Instruktor logged;
-
+    protected final RepositoryCustom brokerCustom = new DbRepositoryCustom();
+    
     public Instruktor getLogged() {
         return logged;
     }
@@ -27,15 +30,8 @@ public class Login extends ApstraktnaGenerickaOperacija{
 
     @Override
     protected void izvrsiOperaciju(Object obj) throws Exception {
-        List<Instruktor> list = broker.read((Instruktor) obj);
         Instruktor ins = (Instruktor) obj;
-        for(Instruktor i : list){
-            if(i.getKorisnickoIme().equals(ins.getKorisnickoIme()) && i.getSifra().equals(ins.getSifra())){
-              logged = i;
-              return;
-          }
-        }
-            logged = null;
+        logged = brokerCustom.login(ins);
     }
     
 }

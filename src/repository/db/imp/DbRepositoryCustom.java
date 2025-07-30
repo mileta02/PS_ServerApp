@@ -7,6 +7,7 @@ package repository.db.imp;
 import connection.DBConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,5 +215,33 @@ public class DbRepositoryCustom implements repository.RepositoryCustom{
         }
         System.out.println("Operacija saveTerminWithSkijasi.");
         return true;
+    }
+
+    @Override
+    public Instruktor login(Instruktor instruktor) throws Exception {
+            String query = "SELECT * FROM instruktor WHERE korisnickoIme=? AND sifra=?;";
+            try(PreparedStatement ps =  DBConnection.getInstance().getConnection().prepareStatement(query))
+            {
+                ps.setString(1, instruktor.getKorisnickoIme());
+                ps.setString(2, instruktor.getSifra());
+                try(ResultSet rs = ps.executeQuery()){
+                    if(rs.next()){
+                        Instruktor ulogovaniInstruktor = new Instruktor();
+                        ulogovaniInstruktor.setIdInstruktor(rs.getInt("idInstruktor"));
+                        ulogovaniInstruktor.setIme(rs.getString("ime"));
+                        ulogovaniInstruktor.setPrezime(rs.getString("prezime"));
+                        ulogovaniInstruktor.setKontakt(rs.getString("kontakt"));
+                        ulogovaniInstruktor.setKorisnickoIme(rs.getString("korisnickoIme"));
+                        ulogovaniInstruktor.setSifra(rs.getString("sifra"));
+
+                        return ulogovaniInstruktor;
+                    }
+                }
+            }catch(Exception ex){
+               Logger.getLogger(DbRepositoryGeneric.class.getName()).log(Level.SEVERE, null, ex);
+               throw ex;
+            }
+        System.out.println("Operacija login.");     
+        return null;
     }
 }

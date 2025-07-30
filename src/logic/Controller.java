@@ -43,7 +43,7 @@ public class Controller {
     }
     //INSTRUKTOR SO
     public Instruktor login(Instruktor i) throws Exception {
-        Login operacija = new Login();
+        PrijaviInstruktor operacija = new PrijaviInstruktor();
         operacija.izvrsi(i, "login");
         return operacija.getLogged();
     }
@@ -82,7 +82,7 @@ public class Controller {
     
     //LICENCA
     public boolean kreirajLicenca(Licenca l) throws Exception {
-        KreirajLicenca operacija = new KreirajLicenca();
+        UbaciLicenca operacija = new UbaciLicenca();
         operacija.izvrsi(l, "create");
         return operacija.getValid();
     }
